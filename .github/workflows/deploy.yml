@@ -11,6 +11,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check required secrets
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          missing=""
+          [ -z "$SSH_HOST" ] && missing="${missing} SSH_HOST"
+          [ -z "$SSH_USER" ] && missing="${missing} SSH_USER"
+          [ -z "$SSH_PASSWORD" ] && missing="${missing} SSH_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing GitHub repository secrets:${missing}"
+            echo "Add them at: Settings → Secrets and variables → Actions → New repository secret"
+            echo "  SSH_HOST = 187.127.87.232"
+            echo "  SSH_USER = root"
+            echo "  SSH_PASSWORD = your server SSH password"
+            exit 1
+          fi
+
       - name: Install rsync and sshpass
         run: sudo apt-get update && sudo apt-get install -y rsync sshpass
 
