@@ -1,0 +1,39 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install rsync and sshpass
+        run: sudo apt-get update && sudo apt-get install -y rsync sshpass
+
+      - name: Sync files to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          export SSHPASS="$SSH_PASSWORD"
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.env' \
+            --exclude 'config/odoo.conf' \
+            -e "sshpass -e ssh -o StrictHostKeyChecking=no" \
+            ./ "${SSH_USER}@${SSH_HOST}:/opt/torque-zone/"
+
+      - name: Run deploy on server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          export SSHPASS="$SSH_PASSWORD"
+          sshpass -e ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
+            "cd /opt/torque-zone && chmod +x scripts/deploy.sh && ./scripts/deploy.sh"
