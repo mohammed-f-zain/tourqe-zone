@@ -33,13 +33,28 @@ jobs:
       - name: Install rsync and sshpass
         run: sudo apt-get update && sudo apt-get install -y rsync sshpass
 
+      - name: Test SSH connection
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          SSH_HOST="$(echo -n "$SSH_HOST" | tr -d '[:space:]')"
+          SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
+          export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
+          echo "Connecting to ${SSH_USER}@${SSH_HOST} ..."
+          sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 \
+            "${SSH_USER}@${SSH_HOST}" "echo SSH connection OK"
+
       - name: Sync files to server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          export SSHPASS="$SSH_PASSWORD"
+          SSH_HOST="$(echo -n "$SSH_HOST" | tr -d '[:space:]')"
+          SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
+          export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
           rsync -avz --delete \
             --exclude '.git' \
             --exclude '.env' \
@@ -53,6 +68,8 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          export SSHPASS="$SSH_PASSWORD"
+          SSH_HOST="$(echo -n "$SSH_HOST" | tr -d '[:space:]')"
+          SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
+          export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
           sshpass -e ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
             "cd /opt/torque-zone && chmod +x scripts/deploy.sh && ./scripts/deploy.sh"
