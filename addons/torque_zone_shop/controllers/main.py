@@ -12,10 +12,29 @@ class TorqueZoneShop(http.Controller):
     # ── Session / cart helpers ──────────────────────────────────────────
 
     def _get_cart(self):
-        return request.session.get('torque_cart', {'lines': []})
+        raw = request.session.get('torque_cart')
+        if not raw or not isinstance(raw, dict):
+            return {'lines': []}
+        return {
+            'lines': [
+                {'product_id': int(line['product_id']), 'qty': int(line['qty'])}
+                for line in raw.get('lines', [])
+                if line.get('product_id')
+            ],
+        }
 
     def _save_cart(self, cart):
-        request.session['torque_cart'] = cart
+        lines = cart.get('lines', []) if isinstance(cart, dict) else cart
+        request.session['torque_cart'] = {
+            'lines': [
+                {'product_id': int(line['product_id']), 'qty': int(line['qty'])}
+                for line in lines
+                if int(line.get('qty', 0)) > 0
+            ],
+        }
+        # Detach from Odoo website_sale draft order so it cannot restore old lines.
+        request.session.pop('sale_order_id', None)
+        request.session.pop('website_sale_cart_quantity', None)
         request.session.modified = True
 
     def _cart_count(self):
@@ -403,8 +422,16 @@ class TorqueZoneShop(http.Controller):
     @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_remove(self, product_id, **kw):
         cart = self._get_cart()
-        cart['lines'] = [l for l in cart.get('lines', []) if int(l['product_id']) != int(product_id)]
+        cart['lines'] = [
+            l for l in cart.get('lines', [])
+            if int(l['product_id']) != int(product_id)
+        ]
         self._save_cart(cart)
+        return self._redirect('/shop/cart', **kw)
+
+    @http.route('/shop/cart/clear', type='http', auth='public', website=True)
+    def shop_cart_clear(self, **kw):
+        self._save_cart({'lines': []})
         return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/checkout', type='http', auth='public', website=True)

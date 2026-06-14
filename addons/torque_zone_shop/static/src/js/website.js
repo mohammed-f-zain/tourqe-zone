@@ -161,7 +161,9 @@
         if (totalEl) totalEl.textContent = result.total_formatted;
 
         if (result.empty) {
-            setTimeout(showEmptyCart, 280);
+            setTimeout(function () {
+                window.location.assign(tzPath('/shop/cart'));
+            }, 200);
             return;
         }
 
@@ -169,7 +171,9 @@
             removeCartItem(item);
             var list = document.querySelector('.tz-cart-list');
             if (list && !list.querySelector('.tz-cart-item')) {
-                setTimeout(showEmptyCart, 280);
+                setTimeout(function () {
+                    window.location.assign(tzPath('/shop/cart'));
+                }, 200);
             }
             return;
         }
@@ -254,11 +258,15 @@
 
     function initAddToCart() {
         document.querySelectorAll('[data-tz-add-cart], form[action*="/shop/cart/add"]').forEach(function (form) {
+            var btn = form.querySelector('button[type="submit"]');
+            if (btn && !btn.dataset.tzLabel) {
+                btn.dataset.tzLabel = btn.textContent.trim();
+            }
+
             form.addEventListener('submit', function (ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
 
-                var btn = form.querySelector('button[type="submit"]');
                 var addingLabel = (document.documentElement.lang || '').indexOf('ar') === 0
                     ? 'جاري الإضافة…' : 'Adding…';
                 if (btn && !btn.disabled) {
@@ -288,6 +296,7 @@
                         if (btn) {
                             btn.disabled = false;
                             btn.classList.remove('is-loading');
+                            btn.textContent = btn.dataset.tzLabel || btn.textContent;
                         }
                         HTMLFormElement.prototype.submit.call(form);
                     });

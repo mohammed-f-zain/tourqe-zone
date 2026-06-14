@@ -76,6 +76,10 @@ if WebsiteSale:
         def cart_remove(self, product_id, **kw):
             return _shop.shop_cart_remove(product_id, **kw)
 
+        @http.route('/shop/cart/clear', type='http', auth='public', website=True)
+        def cart_clear(self, **kw):
+            return _shop.shop_cart_clear(**kw)
+
         @http.route('/shop/checkout', type='http', auth='public', website=True, sitemap=False)
         def checkout(self, **post):
             return _shop.shop_checkout(**post)
