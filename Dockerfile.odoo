@@ -1,7 +1,10 @@
 FROM odoo:18.0
 
 USER root
-RUN pip3 install --no-cache-dir --break-system-packages \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir --break-system-packages \
     openpyxl \
     ofxparse \
     qifparse

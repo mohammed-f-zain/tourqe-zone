@@ -30,4 +30,19 @@ docker compose run --rm odoo odoo -c /etc/odoo/odoo.conf -d "${ODOO_DB}" \
   -u torque_zone_shop --load-language=ar_001 --stop-after-init
 docker compose up -d --remove-orphans
 
+echo "Waiting for Odoo to accept traffic..."
+ready=0
+for i in $(seq 1 40); do
+  if curl -sf http://127.0.0.1:8069/web/health >/dev/null 2>&1; then
+    ready=1
+    echo "Odoo ready after ~${i} checks."
+    break
+  fi
+  sleep 2
+done
+if [[ "$ready" -ne 1 ]]; then
+  echo "WARNING: Odoo health check did not pass — site may show 502 briefly."
+  docker logs torque_zone_odoo --tail 30 2>&1 || true
+fi
+
 echo "Deploy finished. Odoo: http://127.0.0.1:8069 (via nginx on public domain)"
