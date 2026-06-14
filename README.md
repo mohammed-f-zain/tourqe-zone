@@ -1,55 +1,44 @@
-# Torque Zone — Odoo 18 Community
+# Torque Zone — Odoo 18 + E-commerce Shop
 
-Dockerized Odoo 18 with custom accounting addons, nginx, and GitHub Actions deploy.
+Odoo 18 with accounting addons, COD e-commerce storefront, and GitHub Actions deploy.
 
-## Secrets — never commit to this repo
+## Local development
 
-| File / place | What goes there |
-|--------------|-----------------|
-| **`.env`** (local + server only) | `POSTGRES_PASSWORD`, `ODOO_ADMIN_PASSWORD` — already in `.gitignore` |
-| **GitHub → Settings → Secrets → Actions** | `SSH_HOST`, `SSH_USER`, `SSH_PASSWORD` for auto-deploy |
-| **This repository** | Code, `docker-compose.yml`, addons, nginx config — **no passwords** |
+**Requires Docker Desktop** (start it first).
 
-Copy `.env.example` to `.env` on the server and fill in values. The server keeps its own `/opt/torque-zone/.env`; deploy never overwrites it.
+```bash
+cp .env.example .env          # edit passwords if you like
+./scripts/dev.sh              # starts Postgres + Odoo on http://localhost:8069
+./scripts/init-local-db.sh    # first time only — creates DB + installs shop
+```
 
-### GitHub Actions secrets (add in GitHub UI)
+| URL | Purpose |
+|-----|---------|
+| http://localhost:8069/web | Odoo backend (dashboard) |
+| http://localhost:8069/shop | E-commerce storefront |
 
-1. Open https://github.com/mohammed-f-zain/tourqe-zone/settings/secrets/actions
-2. **New repository secret** for each:
+### After init
 
-| Name | Example value |
-|------|----------------|
-| `SSH_HOST` | `187.127.87.232` |
-| `SSH_USER` | `root` |
-| `SSH_PASSWORD` | your server SSH password |
+1. Open http://localhost:8069/web — set master password / admin if prompted  
+2. **Inventory → Products** — create products, enable **Can be Sold** + **Show in Shop**  
+3. **Sales → Orders** — website COD orders appear with delivery status  
 
-Push to `main` runs `.github/workflows/deploy.yml` and syncs code to the server.
+## E-commerce (Torque Zone Shop)
 
-## Stack
+- Products & categories from **Inventory** (`product.template`, `product.category`)
+- **Cash on delivery** only — no online payment
+- Checkout: name, phone, Jordan city, optional notes
+- Orders flow into **Sales** with delivery statuses:
+  - Pending → Confirmed → Preparing → Out for Delivery → Delivered (or Cancelled)
 
-- Odoo 18 Community (custom image with accounting Python deps)
-- PostgreSQL 16
-- Addons: `base_account_budget`, `base_accounting_kit`
-- nginx + Let's Encrypt on the host
+## Production server
 
-## DNS
+- https://torque-zone.shop/web/login — backend  
+- https://torque-zone.shop/shop — storefront (after installing `torque_zone_shop`)
 
-| Type | Name | Value |
-|------|------|--------|
-| A | `@` | `187.127.87.232` |
-| CNAME | `www` | `torque-zone.shop` |
+## Secrets
 
-If the site shows `DNS_PROBE_FINISHED_NXDOMAIN`, DNS is not visible on your network yet. Try:
-
-- Flush DNS: `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
-- Use DNS `8.8.8.8` / `1.1.1.1` in macOS Network settings
-- Test: `dig @8.8.8.8 torque-zone.shop A +short` → should print `187.127.87.232`
-
-## Odoo (production)
-
-- URL: https://torque-zone.shop/web/login
-- Database: `torque_zone` (pre-created on server)
-- Login/password: set on server — see `/opt/torque-zone/.env` and admin user on the instance
+Never commit `.env`. GitHub Actions secrets: `SSH_HOST`, `SSH_USER`, `SSH_PASSWORD`.
 
 ## Manual deploy
 
@@ -57,8 +46,3 @@ If the site shows `DNS_PROBE_FINISHED_NXDOMAIN`, DNS is not visible on your netw
 rsync -avz --exclude '.git' --exclude '.env' ./ root@YOUR_SERVER:/opt/torque-zone/
 ssh root@YOUR_SERVER 'cd /opt/torque-zone && ./scripts/deploy.sh'
 ```
-
-## Paths on server
-
-- App: `/opt/torque-zone`
-- Addons: `/opt/torque-zone/addons`

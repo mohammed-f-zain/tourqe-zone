@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_torque_delivery" model="ir.ui.view">
+        <field name="name">sale.order.form.torque.delivery</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_method_cod" readonly="1"/>
+                <field name="tz_delivery_status" widget="statusbar"
+                       statusbar_visible="pending,confirmed,preparing,out_for_delivery,delivered"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="delivery_customer_name"/>
+                <field name="delivery_phone"/>
+                <field name="delivery_city"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_delivery_confirm" string="Confirm Delivery" type="object"
+                        invisible="tz_delivery_status != 'pending'" class="btn-primary"/>
+                <button name="action_delivery_prepare" string="Start Preparing" type="object"
+                        invisible="tz_delivery_status != 'confirmed'"/>
+                <button name="action_delivery_ship" string="Out for Delivery" type="object"
+                        invisible="tz_delivery_status != 'preparing'"/>
+                <button name="action_delivery_complete" string="Mark Delivered" type="object"
+                        invisible="tz_delivery_status != 'out_for_delivery'" class="btn-success"/>
+                <button name="action_delivery_cancel" string="Cancel Delivery" type="object"
+                        invisible="tz_delivery_status in ('delivered', 'cancelled')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_torque_delivery" model="ir.ui.view">
+        <field name="name">sale.order.tree.torque.delivery</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="tz_delivery_status" widget="badge"
+                       decoration-info="tz_delivery_status == 'pending'"
+                       decoration-primary="tz_delivery_status == 'confirmed'"
+                       decoration-warning="tz_delivery_status in ('preparing', 'out_for_delivery')"
+                       decoration-success="tz_delivery_status == 'delivered'"
+                       decoration-danger="tz_delivery_status == 'cancelled'"/>
+                <field name="delivery_city"/>
+                <field name="delivery_phone"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_search_torque_delivery" model="ir.ui.view">
+        <field name="name">sale.order.search.torque.delivery</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <separator/>
+                <filter string="Pending Delivery" name="delivery_pending"
+                        domain="[('tz_delivery_status', '=', 'pending')]"/>
+                <filter string="Out for Delivery" name="delivery_shipping"
+                        domain="[('tz_delivery_status', '=', 'out_for_delivery')]"/>
+                <filter string="Delivered" name="delivery_done"
+                        domain="[('tz_delivery_status', '=', 'delivered')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Delivery Status" name="group_tz_delivery_status"
+                        context="{'group_by': 'tz_delivery_status'}"/>
+                <filter string="City" name="group_delivery_city"
+                        context="{'group_by': 'delivery_city'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

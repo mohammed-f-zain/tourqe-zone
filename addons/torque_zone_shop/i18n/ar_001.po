@@ -1,0 +1,372 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* torque_zone_shop
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-19 12:00+0000\n"
+"PO-Revision-Date: 2026-05-19 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+"Language: ar_001\n"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Home"
+msgstr "الرئيسية"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "About Us"
+msgstr "من نحن"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Shop"
+msgstr "المتجر"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Contact"
+msgstr "اتصل بنا"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Cart"
+msgstr "السلة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Navigate"
+msgstr "تصفح"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "All Products"
+msgstr "جميع المنتجات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Your Cart"
+msgstr "سلتك"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Checkout"
+msgstr "إتمام الطلب"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Cash on delivery · All Jordan cities"
+msgstr "الدفع عند الاستلام · جميع مدن الأردن"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "© 2026 Torque Zone. All rights reserved."
+msgstr "© 2026 تورك زون. جميع الحقوق محفوظة."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "View Details"
+msgstr "عرض التفاصيل"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Add to Cart"
+msgstr "أضف للسلة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Categories"
+msgstr "الفئات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Cash on Delivery"
+msgstr "الدفع عند الاستلام"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "Pay when your order arrives at your door."
+msgstr "ادفع عند وصول طلبك إلى باب منزلك."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.website_layout
+msgid "All"
+msgstr "الكل"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.journey_steps
+msgid "Done"
+msgstr "تم"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_catalog
+msgid "Our Shop"
+msgstr "متجرنا"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_catalog
+msgid "Search"
+msgstr "بحث"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_catalog
+msgid "No products found"
+msgstr "لا توجد منتجات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_catalog
+msgid "View All Products"
+msgstr "عرض جميع المنتجات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_product
+msgid "← Back to shop"
+msgstr "← العودة للمتجر"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_product
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_product
+msgid "Related Products"
+msgstr "منتجات ذات صلة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Order Summary"
+msgstr "ملخص الطلب"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Subtotal"
+msgstr "المجموع الفرعي"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Payment"
+msgstr "الدفع"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Continue Shopping"
+msgstr "متابعة التسوق"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Update quantities"
+msgstr "تحديث الكميات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Your cart is empty"
+msgstr "سلتك فارغة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_cart
+msgid "Browse Shop"
+msgstr "تصفح المتجر"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Full Name *"
+msgstr "الاسم الكامل *"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Phone Number *"
+msgstr "رقم الهاتف *"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "City *"
+msgstr "المدينة *"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Select your city"
+msgstr "اختر مدينتك"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Place Order"
+msgstr "تأكيد الطلب"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Your Order"
+msgstr "طلبك"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Total"
+msgstr "الإجمالي"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_confirmation
+msgid "Order Placed!"
+msgstr "تم تأكيد الطلب!"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_confirmation
+msgid "Pay cash when your order arrives."
+msgstr "ادفع نقداً عند وصول طلبك."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_confirmation
+msgid "Back to Home"
+msgstr "العودة للرئيسية"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Industrial tools."
+msgstr "عدد صناعية."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Delivered to you."
+msgstr "نوصلها إليك."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Browse Shop"
+msgstr "تصفح المتجر"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Pay when it arrives"
+msgstr "ادفع عند الاستلام"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Real Stock"
+msgstr "مخزون حقيقي"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Inventory-backed"
+msgstr "من المخزون مباشرة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "36+ Cities"
+msgstr "أكثر من 36 مدينة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Nationwide delivery"
+msgstr "توصيل لجميع أنحاء الأردن"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Browse"
+msgstr "تصفح"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Shop by Category"
+msgstr "تسوق حسب الفئة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Popular"
+msgstr "الأكثر طلباً"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Featured Products"
+msgstr "منتجات مميزة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Need industrial tools?"
+msgstr "تحتاج عدد صناعية؟"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Start Shopping"
+msgstr "ابدأ التسوق"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Our Story"
+msgstr "قصتنا"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "About Torque Zone"
+msgstr "عن تورك زون"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Built for professionals"
+msgstr "صُمم للمحترفين"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Browse Products"
+msgstr "تصفح المنتجات"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Trust"
+msgstr "ثقة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Service"
+msgstr "خدمة"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_about
+msgid "Delivery"
+msgstr "توصيل"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_contact
+msgid "Get in Touch"
+msgstr "تواصل معنا"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_contact
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_contact
+msgid "Order Online"
+msgstr "اطلب أونلاين"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_contact
+msgid "Go to Shop"
+msgstr "اذهب للمتجر"
+
+#. module: torque_zone_shop
+#: code:addons/torque_zone_shop/controllers/main.py:0
+msgid "Please enter your name."
+msgstr "يرجى إدخال اسمك."
+
+#. module: torque_zone_shop
+#: code:addons/torque_zone_shop/controllers/main.py:0
+msgid "Please enter your phone number."
+msgstr "يرجى إدخال رقم هاتفك."
+
+#. module: torque_zone_shop
+#: code:addons/torque_zone_shop/controllers/main.py:0
+msgid "Please select your city."
+msgstr "يرجى اختيار مدينتك."
+
+#. module: torque_zone_shop
+#: code:addons/torque_zone_shop/controllers/main.py:0
+msgid "Cash on delivery order from website."
+msgstr "طلب دفع عند الاستلام من الموقع."
