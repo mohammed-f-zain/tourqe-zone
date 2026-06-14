@@ -207,7 +207,9 @@ class TorqueZoneShop(http.Controller):
         return request.redirect('/shop/cart')
 
     def _format_money(self, currency, amount):
-        return currency.format(amount)
+        if hasattr(currency, 'format'):
+            return currency.format(amount)
+        return '%.2f' % amount
 
     def _cart_json_state(self, product_id=None):
         cart = self._get_cart()
@@ -266,8 +268,8 @@ class TorqueZoneShop(http.Controller):
             cart['lines'] = new_lines
             self._save_cart(cart)
 
-    @http.route('/shop/cart/qty', type='json', auth='public', website=True)
-    def shop_cart_qty_json(self, product_id, action='inc'):
+    @http.route('/shop/cart/update_qty', type='json', auth='public', website=True)
+    def shop_cart_update_qty_json(self, product_id, action='inc'):
         self._adjust_cart_qty(product_id, action)
         return self._cart_json_state(product_id)
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Torque Zone Shop',
-    'version': '18.0.9.1.0',
+    'version': '18.0.9.2.0',
     'category': 'Website/Website',
     'summary': 'Full professional website with COD e-commerce for Jordan',
     'description': """

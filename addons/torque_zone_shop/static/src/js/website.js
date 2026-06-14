@@ -69,6 +69,16 @@
         });
     }
 
+    function tzPath(path) {
+        var parts = window.location.pathname.split('/').filter(Boolean);
+        var first = parts[0] || '';
+        var roots = { shop: 1, about: 1, contact: 1, home: 1 };
+        if (first && !roots[first] && first.length <= 10) {
+            return '/' + first + path;
+        }
+        return path;
+    }
+
     function odooJsonRpc(url, params) {
         return fetch(url, {
             method: 'POST',
@@ -115,7 +125,7 @@
             btn.disabled = true;
             wrap.classList.add('is-busy');
 
-            odooJsonRpc('/shop/cart/qty', { product_id: productId, action: action })
+            odooJsonRpc(tzPath('/shop/cart/update_qty'), { product_id: productId, action: action })
                 .then(function (result) {
                     updateCartBadge(result.count);
 
@@ -141,8 +151,8 @@
                 })
                 .catch(function () {
                     window.location.href = action === 'dec'
-                        ? '/shop/cart/dec/' + productId
-                        : '/shop/cart/inc/' + productId;
+                        ? tzPath('/shop/cart/dec/' + productId)
+                        : tzPath('/shop/cart/inc/' + productId);
                 })
                 .finally(function () {
                     btn.disabled = false;
