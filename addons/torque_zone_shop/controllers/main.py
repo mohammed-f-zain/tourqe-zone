@@ -299,6 +299,16 @@ class TorqueZoneShop(http.Controller):
         self._adjust_cart_qty(product_id, 'dec')
         return self._redirect('/shop/cart', **kw)
 
+    @http.route('/shop/cart/remove_item', type='json', auth='public', website=True)
+    def shop_cart_remove_json(self, product_id):
+        cart = self._get_cart()
+        cart['lines'] = [
+            l for l in cart.get('lines', [])
+            if int(l['product_id']) != int(product_id)
+        ]
+        self._save_cart(cart)
+        return self._cart_json_state(product_id)
+
     @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_remove(self, product_id, **kw):
         cart = self._get_cart()

@@ -142,7 +142,7 @@
                                     <p class="tz-price tz-line-subtotal">
                                         <t t-esc="line['subtotal']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
                                     </p>
-                                    <a t-attf-href="/shop/cart/remove/#{line['product_id']}" class="tz-remove" title="Remove">✕</a>
+                                    <button type="button" class="tz-remove" t-att-data-product-id="line['product_id']" title="Remove" aria-label="Remove">✕</button>
                                 </div>
                             </div>
                         </t>
@@ -158,7 +158,7 @@
                         <a href="/shop" class="tz-btn tz-btn-line tz-btn-wide">Continue Shopping</a>
                     </aside>
                 </div>
-                <div class="tz-empty tz-fade" t-else="">
+                <div class="tz-empty tz-fade" id="tzCartEmpty" t-else="">
                     <span>🛒</span>
                     <h3>Your cart is empty</h3>
                     <p>Browse our shop and add tools to get started.</p>

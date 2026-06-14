@@ -65,6 +65,10 @@ if WebsiteSale:
         def cart_update(self, **post):
             return _shop.shop_cart_update(**post)
 
+        @http.route('/shop/cart/remove_item', type='json', auth='public', website=True)
+        def cart_remove_json(self, product_id):
+            return _shop.shop_cart_remove_json(product_id)
+
         @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
         def cart_remove(self, product_id, **kw):
             return _shop.shop_cart_remove(product_id, **kw)
