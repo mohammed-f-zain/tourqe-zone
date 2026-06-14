@@ -543,11 +543,86 @@
 #tzCartEmpty.is-visible,
 .tz-block > #tzCartEmpty:only-child { display: block; }
 
-/* PDP — match shop styling */
-.tz-pdp {
+/* ── PDP (product detail) ───────────────────────────── */
+.tz-pdp-page {
+    padding: 1.5rem 0 3rem;
+}
+
+.tz-pdp-crumb {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--tz-muted);
+}
+
+.tz-pdp-crumb .tz-back {
+    color: var(--tz-orange);
+    margin-bottom: 0;
+}
+
+.tz-pdp-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
     gap: 2.5rem;
+    align-items: start;
+}
+
+.tz-pdp-gallery {
+    background: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--tz-shadow-md);
+    position: sticky;
+    top: 5.5rem;
+}
+
+.tz-pdp-stage {
+    background: var(--tz-bg);
+    border-radius: var(--tz-radius);
+    overflow: hidden;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tz-pdp-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.25s ease;
+}
+
+.tz-pdp-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.tz-pdp-thumb {
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    border: 2px solid var(--tz-border);
+    border-radius: 10px;
+    background: var(--tz-bg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.tz-pdp-thumb:hover { border-color: var(--tz-orange); transform: translateY(-2px); }
+.tz-pdp-thumb.is-active { border-color: var(--tz-orange); box-shadow: 0 0 0 3px var(--tz-orange-light); }
+
+.tz-pdp-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.tz-pdp-panel {
     background: var(--tz-white);
     border: 1px solid var(--tz-border);
     border-radius: var(--tz-radius-lg);
@@ -555,20 +630,58 @@
     box-shadow: var(--tz-shadow-md);
 }
 
+.tz-pdp-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0.75rem 0 1rem;
+    letter-spacing: -0.02em;
+}
+
+.tz-pdp-price { margin: 0 0 1rem; }
+
+.tz-pdp-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tz-pdp-buy {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--tz-border);
+}
+
+.tz-pdp-desc-block h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--tz-text);
+}
+
+.tz-pdp-desc {
+    color: var(--tz-muted);
+    line-height: 1.8;
+    margin: 0 0 1rem;
+    white-space: pre-line;
+}
+
+.tz-pdp-desc-html {
+    color: var(--tz-text);
+    line-height: 1.8;
+    font-size: 0.9375rem;
+}
+
+.tz-pdp-desc-html p { margin: 0 0 0.75rem; }
+.tz-pdp-desc-html ul, .tz-pdp-desc-html ol { padding-inline-start: 1.25rem; margin: 0 0 0.75rem; }
+
 .tz-pdp .tz-price,
-.tz-pdp .oe_currency_value {
+.tz-pdp-panel .tz-price,
+.tz-pdp-panel .oe_currency_value {
     color: var(--tz-orange) !important;
     font-weight: 800;
 }
-
-.tz-pdp-img {
-    background: var(--tz-bg);
-    border-radius: var(--tz-radius);
-    overflow: hidden;
-    aspect-ratio: 1;
-}
-
-.tz-pdp-img img { width: 100%; height: 100%; object-fit: cover; }
 
 .tz-shop-filters {
     display: flex;
@@ -615,20 +728,6 @@
     font-size: 1.5rem;
     font-weight: 800;
 }
-
-.tz-pdp-desc {
-    color: var(--tz-muted);
-    line-height: 1.8;
-    margin: 0 0 1rem;
-    white-space: pre-line;
-}
-
-.tz-pdp-desc-html {
-    color: var(--tz-text);
-    line-height: 1.8;
-}
-
-.tz-pdp-desc-html p { margin: 0 0 0.75rem; }
 
 .tz-field-row {
     display: flex;
@@ -1048,7 +1147,8 @@ a.tz-flow-step:hover { color: #fff; border-color: var(--tz-orange); }
     .tz-hero-grid { grid-template-columns: 1fr; }
     .tz-hero-visual { display: none; }
     .tz-band-grid { grid-template-columns: 1fr; }
-    .tz-pdp { grid-template-columns: 1fr; }
+    .tz-pdp-layout { grid-template-columns: 1fr; }
+    .tz-pdp-gallery { position: static; }
     .tz-checkout { grid-template-columns: 1fr; }
     .tz-summary { position: static; }
     .tz-split { grid-template-columns: 1fr; }

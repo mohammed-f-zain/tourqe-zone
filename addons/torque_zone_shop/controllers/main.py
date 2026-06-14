@@ -87,6 +87,31 @@ class TorqueZoneShop(http.Controller):
             return f'/web/image/product.template/{product.id}/image_512'
         return '/torque_zone_shop/static/src/img/placeholder.svg'
 
+    def _get_product_images(self, product):
+        images = []
+        if product.image_512:
+            images.append({
+                'id': 'main',
+                'url': f'/web/image/product.template/{product.id}/image_512',
+                'name': product.name,
+            })
+        extra_media = getattr(product, 'product_template_image_ids', None)
+        if extra_media:
+            for media in extra_media.sorted('sequence'):
+                if media.image_512:
+                    images.append({
+                        'id': media.id,
+                        'url': f'/web/image/product.image/{media.id}/image_512',
+                        'name': media.name or product.name,
+                    })
+        if not images:
+            images.append({
+                'id': 'placeholder',
+                'url': '/torque_zone_shop/static/src/img/placeholder.svg',
+                'name': product.name,
+            })
+        return images
+
     def _enrich_cart_lines(self, cart):
         Product = request.env['product.template'].sudo()
         lines = []
@@ -186,11 +211,13 @@ class TorqueZoneShop(http.Controller):
             ('sale_ok', '=', True),
         ], limit=4)
 
+        images = self._get_product_images(product)
         return request.render('torque_zone_shop.shop_product', self._page_ctx(
             'shop',
             product=product,
             related_products=related,
-            image_url=self._product_image_url(product),
+            images=images,
+            image_url=images[0]['url'],
         ))
 
     @http.route('/shop/cart', type='http', auth='public', website=True)

@@ -251,11 +251,32 @@
         });
     }
 
+    function initPdpGallery() {
+        var main = document.getElementById('tzPdpMain');
+        if (!main) return;
+        document.querySelectorAll('.tz-pdp-thumb').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var src = btn.getAttribute('data-src');
+                if (!src) return;
+                main.style.opacity = '0';
+                setTimeout(function () {
+                    main.src = src;
+                    main.style.opacity = '1';
+                }, 120);
+                document.querySelectorAll('.tz-pdp-thumb').forEach(function (b) {
+                    b.classList.remove('is-active');
+                });
+                btn.classList.add('is-active');
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initHeader();
         initFadeIn();
         initQtySteppers();
         initCartActions();
         initAddToCart();
+        initPdpGallery();
     });
 })();

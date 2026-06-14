@@ -79,28 +79,45 @@
 
     <template id="shop_product" name="Product Detail">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tz-top tz-top-sm tz-fade">
-                <div class="tz-wrap">
+            <section class="tz-pdp-page tz-wrap">
+                <nav class="tz-pdp-crumb tz-fade">
                     <a href="/shop" class="tz-back">← Back to shop</a>
-                    <span class="tz-badge" t-if="product.categ_id" t-esc="product.categ_id.name"/>
-                    <h1 t-esc="product.name"/>
-                </div>
-            </section>
-            <section class="tz-block tz-wrap">
-                <div class="tz-pdp tz-fade">
-                    <div class="tz-pdp-img">
-                        <img t-att-src="image_url" t-att-alt="product.name"/>
+                    <span t-if="product.categ_id"> / <t t-esc="product.categ_id.name"/></span>
+                </nav>
+
+                <div class="tz-pdp-layout tz-fade">
+                    <div class="tz-pdp-gallery">
+                        <div class="tz-pdp-stage">
+                            <img id="tzPdpMain" t-att-src="images[0]['url']" t-att-alt="product.name"/>
+                        </div>
+                        <div class="tz-pdp-thumbs" t-if="len(images) > 1">
+                            <button type="button"
+                                    t-foreach="images" t-as="img"
+                                    t-att-class="'tz-pdp-thumb' + (' is-active' if img_index == 0 else '')"
+                                    t-att-data-src="img['url']"
+                                    t-att-aria-label="img['name']">
+                                <img t-att-src="img['url']" t-att-alt="img['name']"/>
+                            </button>
+                        </div>
                     </div>
-                    <div class="tz-pdp-info">
-                        <p class="tz-price tz-price-lg">
+
+                    <aside class="tz-pdp-panel">
+                        <span class="tz-badge" t-if="product.categ_id" t-esc="product.categ_id.name"/>
+                        <h1 class="tz-pdp-title" t-esc="product.name"/>
+                        <p class="tz-price tz-price-lg tz-pdp-price">
                             <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                         </p>
-                        <div class="tz-badge tz-badge-block">💵 Cash on delivery</div>
-                        <form action="/shop/cart/add" method="post" class="tz-pdp-form">
+                        <div class="tz-pdp-trust">
+                            <span class="tz-badge">💵 Cash on delivery</span>
+                            <span class="tz-badge" t-if="product.sale_ok">✓ In stock</span>
+                        </div>
+
+                        <form action="/shop/cart/add" method="post" class="tz-pdp-buy">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="product_id" t-att-value="product.id"/>
                             <div class="tz-field-row">
-                                <label>Quantity</label>
+                                <label t-if="is_rtl">الكمية</label>
+                                <label t-else="">Quantity</label>
                                 <t t-call="torque_zone_shop.qty_stepper">
                                     <t t-set="qty" t-value="1"/>
                                 </t>
@@ -108,17 +125,17 @@
                             <input type="hidden" name="redirect" value="/shop/cart"/>
                             <button type="submit" class="tz-btn tz-btn-fill tz-btn-lg tz-btn-wide">Add to Cart</button>
                         </form>
-                    </div>
+
+                        <div class="tz-pdp-desc-block" t-if="product.description_sale or product.description">
+                            <h2 t-if="is_rtl">الوصف</h2>
+                            <h2 t-else="">Description</h2>
+                            <p class="tz-pdp-desc" t-if="product.description_sale" t-esc="product.description_sale"/>
+                            <div class="tz-pdp-desc-html" t-if="product.description" t-out="product.description"/>
+                        </div>
+                    </aside>
                 </div>
             </section>
-            <section class="tz-block tz-wrap" t-if="product.description_sale or product.description">
-                <div class="tz-pdp-details tz-fade">
-                    <h2 t-if="is_rtl">الوصف</h2>
-                    <h2 t-else="">Description</h2>
-                    <p class="tz-pdp-desc" t-if="product.description_sale" t-esc="product.description_sale"/>
-                    <div class="tz-pdp-desc-html" t-if="product.description" t-out="product.description"/>
-                </div>
-            </section>
+
             <section class="tz-block tz-block-alt" t-if="related_products">
                 <div class="tz-wrap">
                     <h2 class="tz-block-title tz-fade">Related Products</h2>
