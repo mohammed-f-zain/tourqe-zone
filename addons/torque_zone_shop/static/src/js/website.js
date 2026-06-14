@@ -68,11 +68,22 @@
             var plus = wrap.querySelector('.tz-qty-plus');
             if (!input || !valueEl) return;
 
+            var max = parseInt(wrap.dataset.maxQty, 10);
+            if (!max || max < 1) max = 9999;
+
+            function syncButtons(n) {
+                if (plus) plus.disabled = n >= max;
+                if (minus) minus.disabled = n <= 1;
+            }
+
             function setQty(n) {
-                n = Math.max(1, n);
+                n = Math.max(1, Math.min(max, n));
                 input.value = n;
                 valueEl.textContent = n;
+                syncButtons(n);
             }
+
+            setQty(parseInt(input.value, 10) || 1);
 
             if (minus) minus.addEventListener('click', function () {
                 setQty(parseInt(input.value, 10) - 1);
@@ -154,7 +165,7 @@
         setTimeout(function () { item.remove(); }, 250);
     }
 
-    function applyCartResult(result, item, qtyEl, subtotalEl) {
+    function applyCartResult(result, item, qtyEl, subtotalEl, wrap) {
         updateCartBadge(result.count);
 
         var totalEl = document.getElementById('tzCartTotal');
@@ -181,7 +192,32 @@
         if (result.line) {
             if (qtyEl) qtyEl.textContent = result.line.qty;
             if (subtotalEl) subtotalEl.textContent = result.line.subtotal_formatted;
+            if (wrap && result.line.max_qty) {
+                wrap.dataset.maxQty = result.line.max_qty;
+                var plusBtn = wrap.querySelector('[data-action="inc"]');
+                if (plusBtn) plusBtn.disabled = result.line.qty >= result.line.max_qty;
+            }
         }
+        if (result.limit_reached || result.error) {
+            showCartNotice(result.error || 'Maximum quantity reached');
+        }
+    }
+
+    function showCartNotice(message) {
+        var notice = document.getElementById('tzCartNotice');
+        if (!notice) {
+            notice = document.createElement('div');
+            notice.id = 'tzCartNotice';
+            notice.className = 'tz-cart-notice';
+            var block = document.querySelector('.tz-block.tz-wrap');
+            if (block) block.insertBefore(notice, block.firstChild);
+        }
+        notice.textContent = message;
+        notice.classList.add('is-visible');
+        clearTimeout(notice._hideTimer);
+        notice._hideTimer = setTimeout(function () {
+            notice.classList.remove('is-visible');
+        }, 3000);
     }
 
     function cartPost(url, data) {
@@ -242,7 +278,7 @@
 
             cartPost(tzPath('/shop/cart/update_qty'), { product_id: productId, action: action })
                 .then(function (result) {
-                    applyCartResult(result, item, qtyEl, subtotalEl);
+                    applyCartResult(result, item, qtyEl, subtotalEl, wrap);
                 })
                 .catch(function () {
                     window.location.href = action === 'dec'
@@ -289,6 +325,15 @@
                         return res.json();
                     })
                     .then(function (result) {
+                        if (result.error) {
+                            showCartNotice(result.error);
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.classList.remove('is-loading');
+                                btn.textContent = btn.dataset.tzLabel || btn.textContent;
+                            }
+                            return;
+                        }
                         updateCartBadge(result.count);
                         window.location.assign(tzPath('/shop/cart'));
                     })
@@ -324,11 +369,22 @@
         });
     }
 
+    function initCartQtyLimits() {
+        document.querySelectorAll('.tz-qty-cart').forEach(function (wrap) {
+            var max = parseInt(wrap.dataset.maxQty, 10);
+            var valEl = wrap.querySelector('.tz-qty-val');
+            var plus = wrap.querySelector('[data-action="inc"]');
+            if (!valEl || !plus || !max) return;
+            plus.disabled = parseInt(valEl.textContent, 10) >= max;
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initHeader();
         initFadeIn();
         initQtySteppers();
         initCartActions();
+        initCartQtyLimits();
         initAddToCart();
         initPdpGallery();
     });

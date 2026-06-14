@@ -180,6 +180,9 @@ UI_STRINGS = {
         'err_phone': 'Please enter your phone number.',
         'err_address': 'Please enter your delivery address.',
         'err_city': 'Please select your city.',
+        'out_of_stock': 'Out of stock',
+        'stock_left': 'Only %s left in stock',
+        'max_qty_reached': 'Maximum available quantity reached',
     },
     'ar': {
         'nav_home': 'الرئيسية',
@@ -280,6 +283,9 @@ UI_STRINGS = {
         'err_phone': 'يرجى إدخال رقم هاتفك.',
         'err_address': 'يرجى إدخال عنوان التوصيل.',
         'err_city': 'يرجى اختيار مدينتك.',
+        'out_of_stock': 'غير متوفر',
+        'stock_left': 'متبقي %s فقط',
+        'max_qty_reached': 'وصلت للحد الأقصى المتاح',
     },
 }
 

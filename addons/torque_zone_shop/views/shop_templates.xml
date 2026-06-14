@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="qty_stepper" name="Quantity Stepper">
-        <div class="tz-qty" data-qty-stepper="1">
+        <div class="tz-qty" data-qty-stepper="1" t-att-data-max-qty="max_qty if max_qty is not None else 9999">
             <button type="button" class="tz-qty-btn tz-qty-minus" t-att-aria-label="ui['decrease']">−</button>
             <span class="tz-qty-val" t-esc="qty"/>
             <button type="button" class="tz-qty-btn tz-qty-plus" t-att-aria-label="ui['increase']">+</button>
@@ -10,7 +10,7 @@
     </template>
 
     <template id="cart_qty_controls" name="Cart Quantity Controls">
-        <div class="tz-qty tz-qty-cart" t-att-data-product-id="line['product_id']">
+        <div class="tz-qty tz-qty-cart" t-att-data-product-id="line['product_id']" t-att-data-max-qty="line['max_qty']">
             <button type="button" class="tz-qty-btn" data-action="dec" t-att-aria-label="ui['decrease']">−</button>
             <span class="tz-qty-val" t-esc="line['qty']"/>
             <button type="button" class="tz-qty-btn" data-action="inc" t-att-aria-label="ui['increase']">+</button>
@@ -109,21 +109,30 @@
                         </p>
                         <div class="tz-pdp-trust">
                             <span class="tz-badge" t-esc="ui['cod']"/>
-                            <span class="tz-badge" t-if="product.sale_ok" t-esc="ui['in_stock']"/>
+                            <span class="tz-badge tz-badge-out" t-if="tracks_stock and stock_max &lt;= 0" t-esc="ui['out_of_stock']"/>
+                            <span class="tz-badge" t-elif="tracks_stock and stock_max &gt; 0" t-esc="ui['in_stock']"/>
+                            <span class="tz-badge" t-elif="not tracks_stock" t-esc="ui['in_stock']"/>
                         </div>
+                        <p class="tz-stock-note" t-if="tracks_stock and stock_max &gt; 0 and stock_max &lt;= 10">
+                            <t t-esc="ui['stock_left'] % stock_max"/>
+                        </p>
 
-                        <form t-attf-action="#{request.env['ir.http']._url_for('/shop/cart/add')}" method="post" class="tz-pdp-buy tz-add-cart-form" data-tz-add-cart="1">
+                        <form t-if="stock_max &gt; 0 or not tracks_stock"
+                              t-attf-action="#{request.env['ir.http']._url_for('/shop/cart/add')}"
+                              method="post" class="tz-pdp-buy tz-add-cart-form" data-tz-add-cart="1">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="product_id" t-att-value="product.id"/>
                             <div class="tz-field-row">
                                 <label t-esc="ui['quantity']"/>
                                 <t t-call="torque_zone_shop.qty_stepper">
                                     <t t-set="qty" t-value="1"/>
+                                    <t t-set="max_qty" t-value="stock_max if tracks_stock else 9999"/>
                                 </t>
                             </div>
                             <input type="hidden" name="redirect" t-att-value="request.env['ir.http']._url_for('/shop/cart')"/>
                             <button type="submit" class="tz-btn tz-btn-fill tz-btn-lg tz-btn-wide" t-esc="ui['add_to_cart']"/>
                         </form>
+                        <p class="tz-stock-note tz-stock-out" t-else="" t-esc="ui['out_of_stock']"/>
 
                         <div class="tz-pdp-desc-block" t-if="product.description_sale or product.description">
                             <h2 t-esc="ui['description']"/>
@@ -165,6 +174,9 @@
                                     <h3 t-esc="line['name']"/>
                                     <p class="tz-price">
                                         <t t-esc="line['price']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
+                                    </p>
+                                    <p class="tz-stock-note" t-if="line['tracks_stock']">
+                                        <t t-esc="ui['stock_left'] % line['max_qty']"/>
                                     </p>
                                     <t t-call="torque_zone_shop.cart_qty_controls"/>
                                 </div>

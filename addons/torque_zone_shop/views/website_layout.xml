@@ -115,7 +115,12 @@
                 <p class="tz-price">
                     <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 </p>
-                <form t-attf-action="#{request.env['ir.http']._url_for('/shop/cart/add')}" method="post" class="tz-add-cart-form" data-tz-add-cart="1">
+                <t t-set="tracks_stock" t-value="product.is_storable"/>
+                <t t-set="card_max_qty" t-value="int(product.qty_available) if tracks_stock else 9999"/>
+                <t t-if="tracks_stock and card_max_qty &lt;= 0">
+                    <span class="tz-btn tz-btn-line tz-btn-sm tz-btn-wide tz-btn-disabled" t-esc="ui['out_of_stock']"/>
+                </t>
+                <form t-else="" t-attf-action="#{request.env['ir.http']._url_for('/shop/cart/add')}" method="post" class="tz-add-cart-form" data-tz-add-cart="1">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="product_id" t-att-value="product.id"/>
                     <input type="hidden" name="qty" value="1"/>

@@ -590,6 +590,37 @@
 
 .tz-badge-block { display: block; text-align: center; margin: 1rem 0; }
 
+.tz-badge-out { background: #fee2e2; color: #dc2626; }
+
+.tz-stock-note {
+    font-size: 0.8125rem;
+    color: var(--tz-muted);
+    margin: 0.5rem 0 0;
+}
+
+.tz-stock-out { color: #dc2626; font-weight: 600; }
+
+.tz-btn-disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tz-cart-notice {
+    display: none;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--tz-radius);
+    background: #fff4ee;
+    color: var(--tz-orange-dark);
+    border: 1px solid rgba(211, 82, 13, 0.25);
+    font-weight: 600;
+}
+
+.tz-cart-notice.is-visible { display: block; }
+
+.tz-qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* ── Page tops ──────────────────────────────────────── */
 .tz-top {
     background: var(--tz-dark);

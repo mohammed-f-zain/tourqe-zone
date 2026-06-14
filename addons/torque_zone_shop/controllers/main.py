@@ -37,6 +37,59 @@ class TorqueZoneShop(http.Controller):
         request.session.pop('website_sale_cart_quantity', None)
         request.session.modified = True
 
+    def _product_tracks_stock(self, product):
+        product = product.sudo()
+        if getattr(product, 'is_storable', False):
+            return True
+        return getattr(product, 'type', '') == 'product'
+
+    def _get_product_max_qty(self, product):
+        product = product.sudo()
+        if not product.sale_ok:
+            return 0
+        if not self._product_tracks_stock(product):
+            return 9999
+        return max(0, int(product.qty_available))
+
+    def _clamp_qty(self, product, qty):
+        max_qty = self._get_product_max_qty(product)
+        if max_qty <= 0:
+            return 0
+        return min(max(1, int(qty)), max_qty)
+
+    def _sanitize_cart(self):
+        Product = request.env['product.template'].sudo()
+        cart = self._get_cart()
+        new_lines = []
+        changed = False
+        for line in cart.get('lines', []):
+            product = Product.browse(int(line['product_id'])).exists()
+            if not product or not product.torque_shop_published:
+                changed = True
+                continue
+            clamped = self._clamp_qty(product, line.get('qty', 1))
+            if clamped <= 0:
+                changed = True
+                continue
+            if clamped != int(line.get('qty', 1)):
+                changed = True
+            new_lines.append({'product_id': product.id, 'qty': clamped})
+        if changed:
+            self._save_cart({'lines': new_lines})
+            return {'lines': new_lines}
+        return cart
+
+    def _cart_action_error(self, error_key, kw, product_id=None):
+        ui = self._ui()
+        payload = {
+            **self._cart_json_state(product_id),
+            'error': ui.get(error_key, error_key),
+            'limit_reached': error_key == 'max_qty_reached',
+        }
+        if kw.get('ajax'):
+            return self._json_response(payload)
+        return self._redirect('/shop/cart', **kw)
+
     def _cart_count(self):
         cart = self._get_cart()
         return sum(line.get('qty', 0) for line in cart.get('lines', []))
@@ -147,12 +200,17 @@ class TorqueZoneShop(http.Controller):
             product = Product.browse(item['product_id']).exists()
             if not product or not product.torque_shop_published:
                 continue
-            qty = max(1, int(item.get('qty', 1)))
+            max_qty = self._get_product_max_qty(product)
+            qty = self._clamp_qty(product, item.get('qty', 1))
+            if qty <= 0:
+                continue
             lines.append({
                 'product': product,
                 'product_id': product.id,
                 'name': product.name,
                 'qty': qty,
+                'max_qty': max_qty,
+                'tracks_stock': self._product_tracks_stock(product),
                 'price': product.list_price,
                 'subtotal': product.list_price * qty,
                 'image_url': self._product_image_url(product),
@@ -272,17 +330,21 @@ class TorqueZoneShop(http.Controller):
         ], limit=4)
 
         images = self._get_product_images(product)
+        stock_max = self._get_product_max_qty(product)
+        tracks_stock = self._product_tracks_stock(product)
         return request.render('torque_zone_shop.shop_product', self._page_ctx(
             'shop',
             product=product,
             related_products=related,
             images=images,
             image_url=images[0]['url'],
+            stock_max=stock_max,
+            tracks_stock=tracks_stock,
         ))
 
     @http.route('/shop/cart', type='http', auth='public', website=True)
     def shop_cart(self, **kw):
-        cart = self._get_cart()
+        cart = self._sanitize_cart()
         lines = self._enrich_cart_lines(cart)
         total = sum(line['subtotal'] for line in lines)
         return request.render('torque_zone_shop.shop_cart', self._page_ctx(
@@ -295,17 +357,30 @@ class TorqueZoneShop(http.Controller):
         if not product.exists() or not product.torque_shop_published:
             return request.redirect('/shop')
 
-        cart = self._get_cart()
+        max_qty = self._get_product_max_qty(product)
+        if max_qty <= 0:
+            return self._cart_action_error('out_of_stock', kw, product_id=product.id)
+
+        cart = self._sanitize_cart()
         qty = max(1, int(qty))
+        current = 0
         for line in cart['lines']:
             if int(line['product_id']) == product.id:
-                line['qty'] += qty
+                current = int(line['qty'])
+                break
+        new_qty = min(current + qty, max_qty)
+        if new_qty <= current:
+            return self._cart_action_error('max_qty_reached', kw, product_id=product.id)
+
+        for line in cart['lines']:
+            if int(line['product_id']) == product.id:
+                line['qty'] = new_qty
                 break
         else:
-            cart['lines'].append({'product_id': product.id, 'qty': qty})
+            cart['lines'].append({'product_id': product.id, 'qty': new_qty})
         self._save_cart(cart)
         if kw.get('ajax'):
-            return self._json_response(self._cart_json_state())
+            return self._json_response(self._cart_json_state(product.id))
         return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/update', type='http', auth='public', methods=['POST'], website=True, csrf=True)
@@ -341,6 +416,7 @@ class TorqueZoneShop(http.Controller):
                 line_data = {
                     'product_id': pid,
                     'qty': match['qty'],
+                    'max_qty': match['max_qty'],
                     'subtotal': match['subtotal'],
                     'subtotal_formatted': self._format_money(currency, match['subtotal']),
                     'removed': False,
@@ -364,18 +440,28 @@ class TorqueZoneShop(http.Controller):
 
     def _adjust_cart_qty(self, product_id, action):
         pid = int(product_id)
+        Product = request.env['product.template'].sudo()
+        product = Product.browse(pid).exists()
+        if not product:
+            return False
+        max_qty = self._get_product_max_qty(product)
         cart = self._get_cart()
         new_lines = []
         changed = False
+        limit_reached = False
         for line in cart.get('lines', []):
             if int(line.get('product_id', 0)) != pid:
                 new_lines.append(line)
                 continue
             qty = int(line.get('qty', 1))
             if action == 'inc':
-                line['qty'] = qty + 1
-                new_lines.append(line)
-                changed = True
+                if qty >= max_qty:
+                    limit_reached = True
+                    new_lines.append(line)
+                else:
+                    line['qty'] = qty + 1
+                    new_lines.append(line)
+                    changed = True
             elif action == 'dec':
                 if qty <= 1:
                     changed = True
@@ -388,11 +474,16 @@ class TorqueZoneShop(http.Controller):
         if changed:
             cart['lines'] = new_lines
             self._save_cart(cart)
+        return limit_reached
 
     @http.route('/shop/cart/update_qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_update_qty(self, product_id, action='inc', **kw):
-        self._adjust_cart_qty(product_id, action)
-        return self._json_response(self._cart_json_state(product_id))
+        limit_reached = self._adjust_cart_qty(product_id, action)
+        payload = self._cart_json_state(product_id)
+        if limit_reached:
+            payload['limit_reached'] = True
+            payload['error'] = self._ui()['max_qty_reached']
+        return self._json_response(payload)
 
     @http.route('/shop/cart/remove_item', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_remove_item(self, product_id, **kw):
@@ -436,7 +527,8 @@ class TorqueZoneShop(http.Controller):
 
     @http.route('/shop/checkout', type='http', auth='public', website=True)
     def shop_checkout(self, **kw):
-        lines = self._enrich_cart_lines(self._get_cart())
+        cart = self._sanitize_cart()
+        lines = self._enrich_cart_lines(cart)
         if not lines:
             return self._redirect('/shop/cart')
         return request.render('torque_zone_shop.shop_checkout', self._page_ctx(
@@ -448,7 +540,7 @@ class TorqueZoneShop(http.Controller):
 
     @http.route('/shop/order/confirm', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_order_confirm(self, **post):
-        cart = self._get_cart()
+        cart = self._sanitize_cart()
         lines = self._enrich_cart_lines(cart)
         if not lines:
             return self._redirect('/shop/cart')
