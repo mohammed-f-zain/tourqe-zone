@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="qty_stepper" name="Quantity Stepper">
-        <div class="tzw-qty-stepper" t-att-data-product-id="product_id">
+        <div class="tzw-qty-stepper">
             <button type="button" class="tzw-qty-btn tzw-qty-minus" aria-label="Decrease">−</button>
             <span class="tzw-qty-value" t-esc="qty"/>
             <button type="button" class="tzw-qty-btn tzw-qty-plus" aria-label="Increase">+</button>
-            <input type="hidden" t-att-name="name or 'qty'" t-att-value="qty" class="tzw-qty-input"/>
+            <input type="hidden" name="qty" t-att-value="qty" class="tzw-qty-input"/>
         </div>
     </template>
 
