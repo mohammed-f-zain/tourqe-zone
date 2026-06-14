@@ -45,9 +45,9 @@ if WebsiteSale:
         def cart_add(self, product_id, qty=1, **kw):
             return _shop.shop_cart_add(product_id, qty=qty, **kw)
 
-        @http.route('/shop/cart/update_qty', type='json', auth='public', website=True)
-        def cart_update_qty_json(self, product_id, action='inc'):
-            return _shop.shop_cart_update_qty_json(product_id, action=action)
+        @http.route('/shop/cart/update_qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+        def cart_update_qty(self, product_id, action='inc', **kw):
+            return _shop.shop_cart_update_qty(product_id, action=action, **kw)
 
         @http.route('/shop/cart/qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
         def cart_qty(self, product_id, action='inc', **kw):
@@ -65,9 +65,9 @@ if WebsiteSale:
         def cart_update(self, **post):
             return _shop.shop_cart_update(**post)
 
-        @http.route('/shop/cart/remove_item', type='json', auth='public', website=True)
-        def cart_remove_json(self, product_id):
-            return _shop.shop_cart_remove_json(product_id)
+        @http.route('/shop/cart/remove_item', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+        def cart_remove_item(self, product_id, **kw):
+            return _shop.shop_cart_remove_item(product_id, **kw)
 
         @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
         def cart_remove(self, product_id, **kw):

@@ -166,6 +166,25 @@
         }
     }
 
+    function cartPost(url, data) {
+        var body = new FormData();
+        if (window.odoo && window.odoo.csrf_token) {
+            body.append('csrf_token', window.odoo.csrf_token);
+        }
+        Object.keys(data).forEach(function (key) {
+            body.append(key, data[key]);
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: body,
+            credentials: 'same-origin',
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            });
+    }
+
     function initCartActions() {
         var cartList = document.querySelector('.tz-cart-list');
         if (!cartList) return;
@@ -177,7 +196,7 @@
                 var item = removeBtn.closest('.tz-cart-item');
                 var productId = parseInt(removeBtn.dataset.productId, 10);
                 removeBtn.disabled = true;
-                odooJsonRpc(tzPath('/shop/cart/remove_item'), { product_id: productId })
+                cartPost(tzPath('/shop/cart/remove_item'), { product_id: productId })
                     .then(function (result) {
                         applyCartResult(result, item, null, null);
                     })
@@ -203,7 +222,7 @@
             btn.disabled = true;
             wrap.classList.add('is-busy');
 
-            odooJsonRpc(tzPath('/shop/cart/update_qty'), { product_id: productId, action: action })
+            cartPost(tzPath('/shop/cart/update_qty'), { product_id: productId, action: action })
                 .then(function (result) {
                     applyCartResult(result, item, qtyEl, subtotalEl);
                 })

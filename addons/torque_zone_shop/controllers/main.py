@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from odoo import http, _
 from odoo.http import request
 
@@ -252,6 +254,12 @@ class TorqueZoneShop(http.Controller):
             'line': line_data,
         }
 
+    def _json_response(self, data):
+        return request.make_response(
+            json.dumps(data),
+            headers=[('Content-Type', 'application/json')],
+        )
+
     def _adjust_cart_qty(self, product_id, action):
         pid = int(product_id)
         cart = self._get_cart()
@@ -279,10 +287,20 @@ class TorqueZoneShop(http.Controller):
             cart['lines'] = new_lines
             self._save_cart(cart)
 
-    @http.route('/shop/cart/update_qty', type='json', auth='public', website=True)
-    def shop_cart_update_qty_json(self, product_id, action='inc'):
+    @http.route('/shop/cart/update_qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+    def shop_cart_update_qty(self, product_id, action='inc', **kw):
         self._adjust_cart_qty(product_id, action)
-        return self._cart_json_state(product_id)
+        return self._json_response(self._cart_json_state(product_id))
+
+    @http.route('/shop/cart/remove_item', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+    def shop_cart_remove_item(self, product_id, **kw):
+        cart = self._get_cart()
+        cart['lines'] = [
+            l for l in cart.get('lines', [])
+            if int(l['product_id']) != int(product_id)
+        ]
+        self._save_cart(cart)
+        return self._json_response(self._cart_json_state(product_id))
 
     @http.route('/shop/cart/qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_qty(self, product_id, action='inc', **kw):
@@ -298,16 +316,6 @@ class TorqueZoneShop(http.Controller):
     def shop_cart_dec(self, product_id, **kw):
         self._adjust_cart_qty(product_id, 'dec')
         return self._redirect('/shop/cart', **kw)
-
-    @http.route('/shop/cart/remove_item', type='json', auth='public', website=True)
-    def shop_cart_remove_json(self, product_id):
-        cart = self._get_cart()
-        cart['lines'] = [
-            l for l in cart.get('lines', [])
-            if int(l['product_id']) != int(product_id)
-        ]
-        self._save_cart(cart)
-        return self._cart_json_state(product_id)
 
     @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_remove(self, product_id, **kw):
