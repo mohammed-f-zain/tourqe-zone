@@ -70,11 +70,18 @@
     }
 
     function tzPath(path) {
+        var lang = document.documentElement.getAttribute('lang') || '';
+        var code = (document.querySelector('html') && document.querySelector('html').getAttribute('lang')) || '';
+        // Use URL prefix from current page (/en/, /ar/, etc.)
         var parts = window.location.pathname.split('/').filter(Boolean);
         var first = parts[0] || '';
-        var roots = { shop: 1, about: 1, contact: 1, home: 1 };
+        var roots = { shop: 1, about: 1, contact: 1, home: 1, web: 1 };
         if (first && !roots[first] && first.length <= 10) {
             return '/' + first + path;
+        }
+        // English non-default: html lang is en-US → prefix /en
+        if (code.indexOf('en') === 0 && path.indexOf('/en/') !== 0) {
+            return '/en' + path;
         }
         return path;
     }

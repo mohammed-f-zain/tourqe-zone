@@ -43,12 +43,10 @@ class TorqueZoneShop(http.Controller):
     def _lang_path(self, path):
         if not path.startswith('/'):
             path = '/' + path
-        segments = (request.httprequest.path or '').strip('/').split('/')
-        lang = segments[0] if segments else ''
-        if lang and lang not in ('shop', 'about', 'contact', 'home', 'web') and len(lang) <= 12:
-            if not path.startswith('/' + lang + '/'):
-                return '/' + lang + path
-        return path
+        try:
+            return request.env['ir.http']._url_for(path)
+        except Exception:
+            return path
 
     def _redirect(self, path, **kw):
         return request.redirect(self._lang_path(kw.get('redirect', path)))
