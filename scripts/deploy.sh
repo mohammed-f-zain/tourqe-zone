@@ -45,4 +45,15 @@ if [[ "$ready" -ne 1 ]]; then
   docker logs torque_zone_odoo --tail 30 2>&1 || true
 fi
 
-echo "Deploy finished. Odoo: http://127.0.0.1:8069 (via nginx on public domain)"
+if [[ -f nginx/torque-zone.shop.conf ]] && command -v nginx >/dev/null 2>&1; then
+  echo "Updating nginx site config..."
+  cp nginx/torque-zone.shop.conf /etc/nginx/sites-available/torque-zone.shop
+  ln -sf /etc/nginx/sites-available/torque-zone.shop /etc/nginx/sites-enabled/torque-zone.shop
+  if command -v certbot >/dev/null 2>&1 && [[ -d /etc/letsencrypt/live/torque-zone.shop ]]; then
+    certbot --nginx -d torque-zone.shop -d www.torque-zone.shop \
+      --non-interactive --agree-tos --redirect -m "admin@torque-zone.shop" 2>/dev/null || true
+  fi
+  nginx -t && systemctl reload nginx
+fi
+
+echo "Deploy finished. Site: https://torque-zone.shop"
