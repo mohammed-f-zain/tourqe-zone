@@ -40,6 +40,19 @@ class TorqueZoneShop(http.Controller):
             **extra,
         }
 
+    def _lang_path(self, path):
+        if not path.startswith('/'):
+            path = '/' + path
+        segments = (request.httprequest.path or '').strip('/').split('/')
+        lang = segments[0] if segments else ''
+        if lang and lang not in ('shop', 'about', 'contact', 'home', 'web') and len(lang) <= 12:
+            if not path.startswith('/' + lang + '/'):
+                return '/' + lang + path
+        return path
+
+    def _redirect(self, path, **kw):
+        return request.redirect(self._lang_path(kw.get('redirect', path)))
+
     def _get_products_domain(self, category_id=None):
         domain = [
             ('sale_ok', '=', True),
@@ -191,7 +204,7 @@ class TorqueZoneShop(http.Controller):
         else:
             cart['lines'].append({'product_id': product.id, 'qty': qty})
         self._save_cart(cart)
-        return request.redirect(kw.get('redirect', '/shop/cart'))
+        return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/update', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_update(self, **post):
@@ -204,7 +217,7 @@ class TorqueZoneShop(http.Controller):
                 new_lines.append(line)
         cart['lines'] = new_lines
         self._save_cart(cart)
-        return request.redirect('/shop/cart')
+        return self._redirect('/shop/cart')
 
     def _format_money(self, currency, amount):
         if hasattr(currency, 'format'):
@@ -276,30 +289,30 @@ class TorqueZoneShop(http.Controller):
     @http.route('/shop/cart/qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_qty(self, product_id, action='inc', **kw):
         self._adjust_cart_qty(product_id, action)
-        return request.redirect(kw.get('redirect', '/shop/cart'))
+        return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/inc/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_inc(self, product_id, **kw):
         self._adjust_cart_qty(product_id, 'inc')
-        return request.redirect(kw.get('redirect', '/shop/cart'))
+        return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/dec/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_dec(self, product_id, **kw):
         self._adjust_cart_qty(product_id, 'dec')
-        return request.redirect(kw.get('redirect', '/shop/cart'))
+        return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_remove(self, product_id, **kw):
         cart = self._get_cart()
         cart['lines'] = [l for l in cart.get('lines', []) if int(l['product_id']) != int(product_id)]
         self._save_cart(cart)
-        return request.redirect('/shop/cart')
+        return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/checkout', type='http', auth='public', website=True)
     def shop_checkout(self, **kw):
         lines = self._enrich_cart_lines(self._get_cart())
         if not lines:
-            return request.redirect('/shop/cart')
+            return self._redirect('/shop/cart')
         return request.render('torque_zone_shop.shop_checkout', self._page_ctx(
             'cart',
             lines=lines,
@@ -312,7 +325,7 @@ class TorqueZoneShop(http.Controller):
         cart = self._get_cart()
         lines = self._enrich_cart_lines(cart)
         if not lines:
-            return request.redirect('/shop/cart')
+            return self._redirect('/shop/cart')
 
         name = (post.get('customer_name') or '').strip()
         phone = (post.get('phone_number') or '').strip()

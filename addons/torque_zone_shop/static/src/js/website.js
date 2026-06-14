@@ -80,6 +80,9 @@
     }
 
     function odooJsonRpc(url, params) {
+        if (window.odoo && window.odoo.csrf_token) {
+            params.csrf_token = window.odoo.csrf_token;
+        }
         return fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -91,7 +94,10 @@
                 id: Date.now(),
             }),
         })
-            .then(function (res) { return res.json(); })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(function (data) {
                 if (data.error) throw new Error(data.error.message || 'Request failed');
                 return data.result;
