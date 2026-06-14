@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="journey_steps" name="Shopping Journey">
-        <nav class="tzw-journey tzw-animate-in" aria-label="Shopping steps" style="--delay:60ms">
-            <a href="/shop" t-att-class="'tzw-journey-pill' + (' done' if journey_step in ('cart','checkout','done') else '') + (' active' if journey_step == 'shop' else '')">
-                <span class="tzw-journey-icon">1</span>
-                <span>Shop</span>
-            </a>
-            <span class="tzw-journey-connector"/>
-            <a href="/shop/cart" t-att-class="'tzw-journey-pill' + (' done' if journey_step in ('checkout','done') else '') + (' active' if journey_step == 'cart' else '')">
-                <span class="tzw-journey-icon">2</span>
-                <span>Cart</span>
-            </a>
-            <span class="tzw-journey-connector"/>
-            <span t-att-class="'tzw-journey-pill' + (' done' if journey_step == 'done' else '') + (' active' if journey_step == 'checkout' else '')">
-                <span class="tzw-journey-icon">3</span>
-                <span>Checkout</span>
-            </span>
-            <span class="tzw-journey-connector"/>
-            <span t-att-class="'tzw-journey-pill' + (' active' if journey_step == 'done' else '')">
-                <span class="tzw-journey-icon">✓</span>
-                <span>Done</span>
-            </span>
-        </nav>
+        <div class="tz-flow">
+            <a href="/shop" t-att-class="'tz-flow-step' + (' done' if journey_step in ('cart','checkout','done') else '') + (' on' if journey_step == 'shop' else '')">① Shop</a>
+            <span class="tz-flow-line"/>
+            <a href="/shop/cart" t-att-class="'tz-flow-step' + (' done' if journey_step in ('checkout','done') else '') + (' on' if journey_step == 'cart' else '')">② Cart</a>
+            <span class="tz-flow-line"/>
+            <span t-att-class="'tz-flow-step' + (' done' if journey_step == 'done' else '') + (' on' if journey_step == 'checkout' else '')">③ Checkout</span>
+            <span class="tz-flow-line"/>
+            <span t-att-class="'tz-flow-step' + (' on' if journey_step == 'done' else '')">④ Done</span>
+        </div>
     </template>
 </odoo>

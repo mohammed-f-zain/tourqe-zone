@@ -3,120 +3,66 @@
     <template id="page_home" name="Home">
         <t t-call="torque_zone_shop.website_layout">
             <t t-set="website_obj" t-value="request.website"/>
-            <section class="tzw-hero tzw-hero-v8">
-                <div class="tzw-hero-bg"/>
-                <div class="tzw-hero-orb tzw-hero-orb-1"/>
-                <div class="tzw-hero-orb tzw-hero-orb-2"/>
-                <div class="tzw-container tzw-hero-grid">
-                    <div class="tzw-hero-text tzw-animate-in">
-                        <span class="tzw-badge tzw-badge-glow">عدد صناعية · Jordan</span>
-                        <h1 t-if="is_rtl">عدد صناعية احترافية<br/><span class="tzw-gradient-text">نوصلها لبابك</span></h1>
-                        <h1 t-else="">Industrial tools.<br/><span class="tzw-gradient-text">Delivered to you.</span></h1>
-                        <p class="tzw-hero-lead tzw-animate-in" style="--delay:80ms" t-if="is_rtl">تسوّق من مخزون حقيقي · ادفع عند الاستلام · توصيل لجميع مدن الأردن</p>
-                        <p class="tzw-hero-lead tzw-animate-in" style="--delay:80ms" t-else="">Real inventory · Cash on delivery · Nationwide Jordan delivery</p>
-                        <div class="tzw-hero-actions tzw-animate-in" style="--delay:120ms">
-                            <a href="/shop" class="tzw-btn tzw-btn-primary tzw-btn-lg tzw-btn-glow">Browse Shop</a>
-                            <a href="/contact" class="tzw-btn tzw-btn-glass tzw-btn-lg">Contact Us</a>
-                        </div>
-                        <div class="tzw-hero-phones tzw-animate-in" style="--delay:160ms">
-                            <a href="tel:0790182722" class="tzw-chip">📞 طارق · 0790182722</a>
-                            <a href="tel:0785426397" class="tzw-chip">📞 أحمد · 0785426397</a>
+            <section class="tz-hero">
+                <div class="tz-wrap tz-hero-grid">
+                    <div class="tz-hero-copy tz-fade">
+                        <p class="tz-label">عدد صناعية · Jordan</p>
+                        <h1 t-if="is_rtl">أدوات صناعية<br/><span>توصيل لبابك</span></h1>
+                        <h1 t-else="">Industrial Tools<br/><span>Delivered Fast</span></h1>
+                        <p class="tz-lead" t-if="is_rtl">مخزون حقيقي · دفع عند الاستلام · أكثر من 36 مدينة</p>
+                        <p class="tz-lead" t-else="">Real stock · Cash on delivery · 36+ cities nationwide</p>
+                        <div class="tz-hero-btns">
+                            <a href="/shop" class="tz-btn tz-btn-fill tz-btn-lg">Shop Now</a>
+                            <a href="tel:0790182722" class="tz-btn tz-btn-line tz-btn-lg">Call Us</a>
                         </div>
                     </div>
-                    <div class="tzw-hero-visual tzw-animate-in" style="--delay:100ms">
-                        <div class="tzw-hero-frame">
-                            <img t-att-src="'/web/image/website/%s/logo' % website_obj.id" alt="Torque Zone" class="tzw-hero-logo"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="tzw-hero-stats tzw-container">
-                    <div class="tzw-stat-card tzw-animate-in" style="--delay:60ms">
-                        <span class="tzw-stat-emoji">💵</span>
-                        <strong>Cash on Delivery</strong>
-                        <span>Pay when it arrives</span>
-                    </div>
-                    <div class="tzw-stat-card tzw-animate-in" style="--delay:120ms">
-                        <span class="tzw-stat-emoji">📦</span>
-                        <strong>Real Stock</strong>
-                        <span>Inventory-backed</span>
-                    </div>
-                    <div class="tzw-stat-card tzw-animate-in" style="--delay:180ms">
-                        <span class="tzw-stat-emoji">🚚</span>
-                        <strong>36+ Cities</strong>
-                        <span>Nationwide delivery</span>
+                    <div class="tz-hero-visual tz-fade" style="--d:100ms">
+                        <img t-att-src="'/web/image/website/%s/logo' % website_obj.id" alt="Torque Zone"/>
                     </div>
                 </div>
             </section>
 
-            <section class="tzw-section tzw-container">
-                <div class="tzw-section-head tzw-animate-in">
-                    <div>
-                        <span class="tzw-eyebrow">How it works</span>
-                        <h2>Order in 3 easy steps</h2>
-                    </div>
-                </div>
-                <div class="tzw-steps-row">
-                    <div class="tzw-step-card tzw-animate-in" style="--delay:0ms">
-                        <div class="tzw-step-num">1</div>
-                        <h3>Browse &amp; Add</h3>
-                        <p>Pick tools and tap + to add to your cart.</p>
-                    </div>
-                    <div class="tzw-step-arrow tzw-animate-in" style="--delay:40ms">→</div>
-                    <div class="tzw-step-card tzw-animate-in" style="--delay:80ms">
-                        <div class="tzw-step-num">2</div>
-                        <h3>Checkout</h3>
-                        <p>Name, phone, address &amp; city — done.</p>
-                    </div>
-                    <div class="tzw-step-arrow tzw-animate-in" style="--delay:120ms">→</div>
-                    <div class="tzw-step-card tzw-animate-in" style="--delay:160ms">
-                        <div class="tzw-step-num">3</div>
-                        <h3>Pay on Delivery</h3>
-                        <p>We call, deliver, you pay cash.</p>
-                    </div>
+            <section class="tz-band">
+                <div class="tz-wrap tz-band-grid">
+                    <div class="tz-band-item tz-fade"><b>💵</b><div><strong>Cash on Delivery</strong><span>Pay at your door</span></div></div>
+                    <div class="tz-band-item tz-fade" style="--d:60ms"><b>📦</b><div><strong>Real Inventory</strong><span>Stock-backed</span></div></div>
+                    <div class="tz-band-item tz-fade" style="--d:120ms"><b>🚚</b><div><strong>Fast Delivery</strong><span>All Jordan</span></div></div>
                 </div>
             </section>
 
-            <section class="tzw-section tzw-section-soft tzw-container" t-if="categories">
-                <div class="tzw-section-head tzw-animate-in">
-                    <div>
-                        <span class="tzw-eyebrow">Categories</span>
-                        <h2>Shop by Category</h2>
-                    </div>
-                    <a href="/shop" class="tzw-link-arrow">View all →</a>
+            <section class="tz-block tz-wrap" t-if="categories">
+                <div class="tz-block-head tz-fade">
+                    <h2>Shop by Category</h2>
+                    <a href="/shop" class="tz-more">View all →</a>
                 </div>
-                <div class="tzw-category-grid">
+                <div class="tz-cats">
                     <a t-foreach="categories" t-as="cat" t-key="cat.id"
                        t-attf-href="/shop/category/#{cat.id}"
-                       class="tzw-category-card tzw-animate-in"
-                       t-attf-style="--delay:#{cat_index * 50}ms">
-                        <span class="tzw-cat-icon">⚙</span>
-                        <span class="tzw-category-name" t-esc="cat.name"/>
-                        <span class="tzw-category-count"><t t-esc="cat.product_count"/> items</span>
+                       class="tz-cat tz-fade" t-attf-style="--d:#{cat_index * 40}ms">
+                        <strong t-esc="cat.name"/>
+                        <span><t t-esc="cat.product_count"/> items</span>
                     </a>
                 </div>
             </section>
 
-            <section class="tzw-section tzw-container" t-if="featured_products">
-                <div class="tzw-section-head tzw-animate-in">
-                    <div>
-                        <span class="tzw-eyebrow">Popular</span>
-                        <h2>Featured Products</h2>
-                    </div>
-                </div>
-                <div class="tzw-product-grid">
-                    <t t-foreach="featured_products" t-as="product">
-                        <t t-call="torque_zone_shop.product_card">
-                            <t t-set="delay" t-value="product_index * 50"/>
+            <section class="tz-block tz-block-alt" t-if="featured_products">
+                <div class="tz-wrap">
+                    <div class="tz-block-head tz-fade"><h2>Featured Products</h2></div>
+                    <div class="tz-grid">
+                        <t t-foreach="featured_products" t-as="product">
+                            <t t-call="torque_zone_shop.product_card">
+                                <t t-set="delay" t-value="product_index * 50"/>
+                            </t>
                         </t>
-                    </t>
+                    </div>
                 </div>
             </section>
 
-            <section class="tzw-cta-band tzw-animate-in">
-                <div class="tzw-container tzw-cta-inner">
-                    <h2>Ready to order?</h2>
-                    <p>Browse tools, checkout in seconds, pay on delivery.</p>
-                    <a href="/shop" class="tzw-btn tzw-btn-white tzw-btn-lg">Start Shopping</a>
+            <section class="tz-cta tz-fade">
+                <div class="tz-wrap tz-cta-inner">
+                    <h2>Need tools today?</h2>
+                    <p>Order online — we call you, then deliver.</p>
+                    <a href="/shop" class="tz-btn tz-btn-white tz-btn-lg">Start Shopping</a>
                 </div>
             </section>
         </t>
@@ -124,25 +70,18 @@
 
     <template id="page_about" name="About Us">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-animate-in">
-                <div class="tzw-container">
-                    <span class="tzw-eyebrow">Our Story</span>
-                    <h1>About Torque Zone</h1>
-                    <p class="tzw-hero-sub">عدد صناعية — Your trusted source for industrial tools in Jordan.</p>
-                </div>
-            </section>
-            <section class="tzw-section tzw-container">
-                <div class="tzw-about-grid tzw-animate-in">
-                    <div class="tzw-glass-panel">
+            <section class="tz-top tz-fade"><div class="tz-wrap"><h1>About Torque Zone</h1><p>عدد صناعية — trusted industrial tools in Jordan</p></div></section>
+            <section class="tz-block tz-wrap">
+                <div class="tz-split tz-fade">
+                    <div class="tz-panel">
                         <h2>Built for professionals</h2>
-                        <p>Torque Zone supplies quality industrial and automotive tools across Jordan. Real stock, fair prices, cash on delivery.</p>
-                        <p>Every order is confirmed by phone before dispatch.</p>
-                        <a href="/shop" class="tzw-btn tzw-btn-primary">Browse Products</a>
+                        <p>Quality tools, fair prices, cash on delivery. Every order confirmed by phone.</p>
+                        <a href="/shop" class="tz-btn tz-btn-fill">Browse Shop</a>
                     </div>
-                    <div class="tzw-info-stack">
-                        <div class="tzw-info-card"><span>01</span><div><h3>Trust</h3><p>Inventory-backed only.</p></div></div>
-                        <div class="tzw-info-card"><span>02</span><div><h3>Service</h3><p>Phone confirmation.</p></div></div>
-                        <div class="tzw-info-card"><span>03</span><div><h3>Delivery</h3><p>Cash on delivery.</p></div></div>
+                    <div class="tz-features">
+                        <div class="tz-feat"><span>01</span><div><h3>Trust</h3><p>Real inventory only</p></div></div>
+                        <div class="tz-feat"><span>02</span><div><h3>Service</h3><p>Phone confirmation</p></div></div>
+                        <div class="tz-feat"><span>03</span><div><h3>Delivery</h3><p>Nationwide COD</p></div></div>
                     </div>
                 </div>
             </section>
@@ -151,30 +90,12 @@
 
     <template id="page_contact" name="Contact">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-animate-in">
-                <div class="tzw-container">
-                    <span class="tzw-eyebrow">Get in Touch</span>
-                    <h1>Contact Us</h1>
-                </div>
-            </section>
-            <section class="tzw-section tzw-container">
-                <div class="tzw-contact-grid">
-                    <a href="tel:0790182722" class="tzw-contact-card tzw-animate-in" style="--delay:0ms">
-                        <div class="tzw-contact-icon">📞</div>
-                        <h3>طارق · Tariq</h3>
-                        <p class="tzw-contact-phone">0790182722</p>
-                    </a>
-                    <a href="tel:0785426397" class="tzw-contact-card tzw-animate-in" style="--delay:60ms">
-                        <div class="tzw-contact-icon">📞</div>
-                        <h3>أحمد · Ahmed</h3>
-                        <p class="tzw-contact-phone">0785426397</p>
-                    </a>
-                    <div class="tzw-contact-card tzw-contact-highlight tzw-animate-in" style="--delay:120ms">
-                        <div class="tzw-contact-icon">🛒</div>
-                        <h3>Order Online</h3>
-                        <p>Browse, cart, checkout — fastest way to order.</p>
-                        <a href="/shop" class="tzw-btn tzw-btn-primary">Go to Shop</a>
-                    </div>
+            <section class="tz-top tz-fade"><div class="tz-wrap"><h1>Contact Us</h1></div></section>
+            <section class="tz-block tz-wrap">
+                <div class="tz-contact-row">
+                    <a href="tel:0790182722" class="tz-contact tz-fade"><span>📞</span><h3>طارق</h3><p>0790182722</p></a>
+                    <a href="tel:0785426397" class="tz-contact tz-fade" style="--d:60ms"><span>📞</span><h3>أحمد</h3><p>0785426397</p></a>
+                    <div class="tz-contact tz-contact-hot tz-fade" style="--d:120ms"><span>🛒</span><h3>Order Online</h3><a href="/shop" class="tz-btn tz-btn-fill">Go to Shop</a></div>
                 </div>
             </section>
         </t>

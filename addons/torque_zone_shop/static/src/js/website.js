@@ -1,52 +1,57 @@
 (function () {
     'use strict';
 
-    function initNav() {
-        var nav = document.getElementById('tzwNav');
-        var toggle = document.getElementById('tzwNavToggle');
-        var menu = document.getElementById('tzwMenu');
-        if (!nav) return;
+    function initHeader() {
+        var header = document.getElementById('tzHeader');
+        var burger = document.getElementById('tzBurger');
+        var nav = document.getElementById('tzNav');
+        if (!header) return;
 
         window.addEventListener('scroll', function () {
-            nav.classList.toggle('tzw-scrolled', window.scrollY > 20);
+            header.classList.toggle('is-scrolled', window.scrollY > 16);
         }, { passive: true });
 
-        if (toggle && menu) {
-            toggle.addEventListener('click', function () {
-                menu.classList.toggle('tzw-open');
-                toggle.classList.toggle('tzw-open');
+        if (burger && nav) {
+            burger.addEventListener('click', function () {
+                nav.classList.toggle('is-open');
+                burger.classList.toggle('is-open');
             });
-            menu.querySelectorAll('.tzw-menu-link').forEach(function (link) {
+            nav.querySelectorAll('.tz-nav-link').forEach(function (link) {
                 link.addEventListener('click', function () {
-                    menu.classList.remove('tzw-open');
-                    toggle.classList.remove('tzw-open');
+                    nav.classList.remove('is-open');
+                    burger.classList.remove('is-open');
                 });
             });
         }
     }
 
-    function initAnimateIn() {
-        if (!window.IntersectionObserver) return;
+    function initFadeIn() {
+        if (!window.IntersectionObserver) {
+            document.querySelectorAll('.tz-fade').forEach(function (el) {
+                el.classList.add('is-visible');
+            });
+            return;
+        }
         var observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('tzw-visible');
+                    entry.target.classList.add('is-visible');
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.tzw-animate-in, .tzw-reveal').forEach(function (el) {
+        document.querySelectorAll('.tz-fade').forEach(function (el) {
             observer.observe(el);
         });
     }
 
     function initQtySteppers() {
-        document.querySelectorAll('.tzw-qty-stepper:not(.tzw-qty-stepper-cart)').forEach(function (wrap) {
-            var input = wrap.querySelector('.tzw-qty-input');
-            var valueEl = wrap.querySelector('.tzw-qty-value');
-            var minus = wrap.querySelector('.tzw-qty-minus');
-            var plus = wrap.querySelector('.tzw-qty-plus');
+        document.querySelectorAll('[data-qty-stepper]').forEach(function (wrap) {
+            var input = wrap.querySelector('.tz-qty-input');
+            var valueEl = wrap.querySelector('.tz-qty-val');
+            var minus = wrap.querySelector('.tz-qty-minus');
+            var plus = wrap.querySelector('.tz-qty-plus');
             if (!input || !valueEl) return;
 
             function setQty(n) {
@@ -55,8 +60,12 @@
                 valueEl.textContent = n;
             }
 
-            if (minus) minus.addEventListener('click', function () { setQty(parseInt(input.value, 10) - 1); });
-            if (plus) plus.addEventListener('click', function () { setQty(parseInt(input.value, 10) + 1); });
+            if (minus) minus.addEventListener('click', function () {
+                setQty(parseInt(input.value, 10) - 1);
+            });
+            if (plus) plus.addEventListener('click', function () {
+                setQty(parseInt(input.value, 10) + 1);
+            });
         });
     }
 
@@ -66,25 +75,17 @@
                 var btn = form.querySelector('button[type="submit"]');
                 if (btn && !btn.disabled) {
                     btn.disabled = true;
-                    btn.classList.add('tzw-loading');
-                    var label = btn.textContent;
-                    btn.dataset.label = label;
+                    btn.classList.add('is-loading');
                     btn.textContent = 'Adding…';
                 }
             });
         });
     }
 
-    function initPageEnter() {
-        var main = document.querySelector('.tzw-main');
-        if (main) main.classList.add('tzw-page-enter');
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        initNav();
-        initAnimateIn();
+        initHeader();
+        initFadeIn();
         initQtySteppers();
         initAddToCart();
-        initPageEnter();
     });
 })();

@@ -6,87 +6,59 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="website_obj" t-value="request.website"/>
             <t t-set="current_path" t-value="request.httprequest.path"/>
-            <div id="tz_website" class="tzw" t-att-data-page="active_page or ''"
-                 t-att-dir="'rtl' if is_rtl else 'ltr'"
-                 t-att-lang="'ar' if is_rtl else 'en'">
+            <div id="tz_website" class="tz" t-att-data-page="active_page or ''"
+                 t-att-dir="'rtl' if is_rtl else 'ltr'">
 
-                <header class="tzw-nav" id="tzwNav">
-                    <div class="tzw-container tzw-nav-inner">
-                        <a href="/" class="tzw-brand">
+                <header class="tz-header" id="tzHeader">
+                    <div class="tz-wrap tz-header-inner">
+                        <a href="/" class="tz-logo-link">
                             <img t-att-src="'/web/image/website/%s/logo' % website_obj.id"
-                                 alt="Torque Zone" class="tzw-logo"/>
+                                 alt="Torque Zone" class="tz-logo"/>
                         </a>
-
-                        <button class="tzw-nav-toggle" id="tzwNavToggle" aria-label="Menu" type="button">
+                        <button class="tz-burger" id="tzBurger" type="button" aria-label="Menu">
                             <span/><span/><span/>
                         </button>
-
-                        <nav class="tzw-menu" id="tzwMenu">
-                            <a href="/" t-att-class="'tzw-menu-link' + (' tzw-active' if active_page == 'home' else '')">Home</a>
-                            <a href="/about" t-att-class="'tzw-menu-link' + (' tzw-active' if active_page == 'about' else '')">About Us</a>
-                            <a href="/shop" t-att-class="'tzw-menu-link' + (' tzw-active' if active_page == 'shop' else '')">Shop</a>
-                            <a href="/contact" t-att-class="'tzw-menu-link' + (' tzw-active' if active_page == 'contact' else '')">Contact</a>
+                        <nav class="tz-nav" id="tzNav">
+                            <a href="/" t-att-class="'tz-nav-link' + (' is-active' if active_page == 'home' else '')">Home</a>
+                            <a href="/shop" t-att-class="'tz-nav-link' + (' is-active' if active_page == 'shop' else '')">Shop</a>
+                            <a href="/about" t-att-class="'tz-nav-link' + (' is-active' if active_page == 'about' else '')">About</a>
+                            <a href="/contact" t-att-class="'tz-nav-link' + (' is-active' if active_page == 'contact' else '')">Contact</a>
                         </nav>
-
-                        <div class="tzw-nav-actions">
-                            <div class="tzw-lang-switch" role="group" aria-label="Language">
+                        <div class="tz-header-end">
+                            <div class="tz-lang">
                                 <a t-attf-href="/website/lang/ar_001?r=#{current_path}"
-                                   t-att-class="'tzw-lang-btn' + (' tzw-lang-active' if is_rtl else '')">عربي</a>
+                                   t-att-class="'tz-lang-btn' + (' is-on' if is_rtl else '')">عربي</a>
                                 <a t-attf-href="/website/lang/en_US?r=#{current_path}"
-                                   t-att-class="'tzw-lang-btn' + (' tzw-lang-active' if not is_rtl else '')">EN</a>
+                                   t-att-class="'tz-lang-btn' + (' is-on' if not is_rtl else '')">EN</a>
                             </div>
-                            <a href="/shop/cart" class="tzw-cart-btn" title="Cart" aria-label="Shopping cart">
-                                <svg class="tzw-cart-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                                    <path d="M6 6h15l-1.5 9H8L6 6z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
-                                    <path d="M6 6L5 3H2"/>
-                                </svg>
-                                <span class="tzw-cart-label">Cart</span>
-                                <span class="tzw-cart-badge" t-esc="cart_count or 0"/>
+                            <a href="/shop/cart" class="tz-cart">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9H8L6 6z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+                                <span>Cart</span>
+                                <em class="tz-cart-count" t-esc="cart_count or 0"/>
                             </a>
                         </div>
                     </div>
-                    <div class="tzw-nav-stripe"/>
                 </header>
 
-                <main class="tzw-main">
+                <main class="tz-main">
                     <t t-out="0"/>
                 </main>
 
-                <footer class="tzw-footer">
-                    <div class="tzw-footer-stripe"/>
-                    <div class="tzw-container">
-                        <div class="tzw-footer-grid">
-                            <div class="tzw-footer-brand">
-                                <div class="tzw-footer-logo-wrap">
-                                    <img t-att-src="'/web/image/website/%s/logo' % website_obj.id"
-                                         alt="Torque Zone" class="tzw-footer-logo"/>
-                                </div>
-                                <p>عدد صناعية — Industrial tools delivered across Jordan. Cash on delivery.</p>
+                <footer class="tz-footer">
+                    <div class="tz-wrap tz-footer-grid">
+                        <div class="tz-footer-brand">
+                            <div class="tz-footer-logo-box">
+                                <img t-att-src="'/web/image/website/%s/logo' % website_obj.id" alt="Torque Zone"/>
                             </div>
-                            <div>
-                                <h4>Navigate</h4>
-                                <a href="/">Home</a>
-                                <a href="/about">About Us</a>
-                                <a href="/shop">Shop</a>
-                                <a href="/contact">Contact</a>
-                            </div>
-                            <div>
-                                <h4>Shop</h4>
-                                <a href="/shop">All Products</a>
-                                <a href="/shop/cart">Your Cart</a>
-                                <a href="/shop/checkout">Checkout</a>
-                            </div>
-                            <div>
-                                <h4>Contact</h4>
-                                <a href="tel:0790182722">طارق · 0790182722</a>
-                                <a href="tel:0785426397">أحمد · 0785426397</a>
-                                <p>Cash on delivery · All Jordan cities</p>
-                            </div>
+                            <p>عدد صناعية — Industrial tools across Jordan. Cash on delivery.</p>
                         </div>
-                        <div class="tzw-footer-bottom">
-                            <span>© 2026 Torque Zone. All rights reserved.</span>
-                            <span>torque-zone.shop</span>
-                        </div>
+                        <div><h5>Pages</h5><a href="/">Home</a><a href="/shop">Shop</a><a href="/about">About</a><a href="/contact">Contact</a></div>
+                        <div><h5>Order</h5><a href="/shop">Products</a><a href="/shop/cart">Cart</a><a href="/shop/checkout">Checkout</a></div>
+                        <div><h5>Call us</h5><a href="tel:0790182722">طارق 0790182722</a><a href="tel:0785426397">أحمد 0785426397</a></div>
+                    </div>
+                    <div class="tz-wrap tz-footer-bar">
+                        <span>© 2026 Torque Zone</span>
+                        <span>torque-zone.shop</span>
                     </div>
                 </footer>
             </div>
@@ -94,16 +66,15 @@
     </template>
 
     <template id="product_card" name="Product Card">
-        <article class="tzw-product-card tzw-animate-in" t-attf-style="--delay:#{delay or 0}ms">
-            <a t-attf-href="/shop/product/#{product.id}" class="tzw-product-img">
+        <article class="tz-card tz-fade" t-attf-style="--d:#{delay or 0}ms">
+            <a t-attf-href="/shop/product/#{product.id}" class="tz-card-img">
                 <img t-att-src="product.image_512 and '/web/image/product.template/%s/image_512' % product.id or '/torque_zone_shop/static/src/img/placeholder.svg'"
                      t-att-alt="product.name" loading="lazy"/>
-                <span class="tzw-product-tag" t-if="product.categ_id" t-esc="product.categ_id.name"/>
-                <span class="tzw-product-overlay">View Details</span>
             </a>
-            <div class="tzw-product-info">
+            <div class="tz-card-body">
+                <span class="tz-card-cat" t-if="product.categ_id" t-esc="product.categ_id.name"/>
                 <h3><a t-attf-href="/shop/product/#{product.id}" t-esc="product.name"/></h3>
-                <p class="tzw-product-price">
+                <p class="tz-price">
                     <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 </p>
                 <form action="/shop/cart/add" method="post">
@@ -111,21 +82,18 @@
                     <input type="hidden" name="product_id" t-att-value="product.id"/>
                     <input type="hidden" name="qty" value="1"/>
                     <input type="hidden" name="redirect" value="/shop/cart"/>
-                    <button type="submit" class="tzw-btn tzw-btn-primary tzw-btn-block tzw-btn-sm">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                        Add to Cart
-                    </button>
+                    <button type="submit" class="tz-btn tz-btn-fill tz-btn-sm tz-btn-wide">+ Add to Cart</button>
                 </form>
             </div>
         </article>
     </template>
 
     <template id="shop_category_pills" name="Category Pills">
-        <div class="tzw-cat-pills tzw-cat-pills-light tzw-reveal">
-            <a href="/shop" t-att-class="'tzw-pill tzw-pill-light' + (' tzw-pill-active' if not category_id else '')">All</a>
+        <div class="tz-tags">
+            <a href="/shop" t-att-class="'tz-tag' + (' is-on' if not category_id else '')">All</a>
             <t t-foreach="categories" t-as="cat">
                 <a t-attf-href="/shop/category/#{cat.id}"
-                   t-att-class="'tzw-pill tzw-pill-light' + (' tzw-pill-active' if category_id == cat.id else '')"
+                   t-att-class="'tz-tag' + (' is-on' if category_id == cat.id else '')"
                    t-esc="cat.name"/>
             </t>
         </div>
