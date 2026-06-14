@@ -2,6 +2,9 @@
 <odoo>
     <!-- Remove Odoo default header/footer — we use our own in website_layout -->
     <template id="tzw_hide_odoo_chrome" inherit_id="website.layout" name="Hide Odoo chrome" priority="99">
+        <xpath expr="//html" position="attributes">
+            <attribute name="data-add2cart-redirect">0</attribute>
+        </xpath>
         <xpath expr="//header[@id='top']" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>

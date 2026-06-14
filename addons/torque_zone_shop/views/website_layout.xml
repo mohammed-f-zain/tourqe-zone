@@ -115,11 +115,11 @@
                 <p class="tz-price">
                     <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 </p>
-                <form action="/shop/cart/add" method="post">
+                <form t-attf-action="#{request.env['ir.http']._url_for('/shop/cart/add')}" method="post" class="tz-add-cart-form" data-tz-add-cart="1">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="product_id" t-att-value="product.id"/>
                     <input type="hidden" name="qty" value="1"/>
-                    <input type="hidden" name="redirect" value="/shop/cart"/>
+                    <input type="hidden" name="redirect" t-att-value="request.env['ir.http']._url_for('/shop/cart')"/>
                     <button type="submit" class="tz-btn tz-btn-fill tz-btn-sm tz-btn-wide" t-esc="ui['add_to_cart']"/>
                 </form>
             </div>

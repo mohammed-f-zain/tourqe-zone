@@ -59,7 +59,8 @@ class TorqueZoneShop(http.Controller):
             return path
 
     def _redirect(self, path, **kw):
-        return request.redirect(self._lang_path(kw.get('redirect', path)))
+        target = self._lang_path(kw.get('redirect', path))
+        return request.redirect(target, code=303)
 
     def _get_sort_order(self, sort=''):
         orders = {
@@ -284,6 +285,8 @@ class TorqueZoneShop(http.Controller):
         else:
             cart['lines'].append({'product_id': product.id, 'qty': qty})
         self._save_cart(cart)
+        if kw.get('ajax'):
+            return self._json_response(self._cart_json_state())
         return self._redirect('/shop/cart', **kw)
 
     @http.route('/shop/cart/update', type='http', auth='public', methods=['POST'], website=True, csrf=True)

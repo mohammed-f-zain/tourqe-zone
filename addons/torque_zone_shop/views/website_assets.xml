@@ -8,8 +8,8 @@
             <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
             <link rel="icon" href="/web/image/website/1/favicon" type="image/png"/>
             <link rel="shortcut icon" href="/web/image/website/1/favicon" type="image/png"/>
-            <link rel="stylesheet" type="text/css" href="/torque_zone_shop/static/src/css/website.css?v=18"/>
-            <script type="text/javascript" src="/torque_zone_shop/static/src/js/website.js?v=18" defer="defer"/>
+            <link rel="stylesheet" type="text/css" href="/torque_zone_shop/static/src/css/website.css?v=19"/>
+            <script type="text/javascript" src="/torque_zone_shop/static/src/js/website.js?v=19" defer="defer"/>
         </xpath>
     </template>
 </odoo>
