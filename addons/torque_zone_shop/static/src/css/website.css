@@ -1,4 +1,4 @@
-/* Torque Zone v9 — clean industrial storefront */
+/* Torque Zone v10 — category nav, bilingual UI, polished pages */
 
 :root {
     --tz-orange: #d3520d;
@@ -95,6 +95,69 @@
 
 .tz-nav-link:hover { color: var(--tz-text); background: var(--tz-orange-light); }
 .tz-nav-link.is-active { color: var(--tz-orange); background: var(--tz-orange-light); font-weight: 600; }
+
+.tz-nav-drop { position: relative; }
+
+.tz-nav-drop-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.tz-nav-chevron { transition: transform 0.2s var(--tz-ease); }
+.tz-nav-drop.is-open .tz-nav-chevron { transform: rotate(180deg); }
+
+.tz-nav-drop-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    inset-inline-start: 0;
+    min-width: 200px;
+    background: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius);
+    box-shadow: var(--tz-shadow-md);
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: all 0.2s var(--tz-ease);
+    z-index: 210;
+}
+
+.tz-nav-drop:hover .tz-nav-drop-menu,
+.tz-nav-drop.is-open .tz-nav-drop-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.tz-nav-drop-all,
+.tz-nav-drop-link {
+    display: block;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    color: var(--tz-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tz-nav-drop-all {
+    font-weight: 700;
+    color: var(--tz-orange);
+    border-bottom: 1px solid var(--tz-border);
+    margin-bottom: 0.35rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.tz-nav-drop-link:hover,
+.tz-nav-drop-all:hover { background: var(--tz-orange-light); color: var(--tz-orange); }
+.tz-nav-drop-link.is-active { background: var(--tz-orange-light); color: var(--tz-orange); font-weight: 600; }
 
 .tz-header-end {
     display: flex;
@@ -355,14 +418,31 @@
 .tz-cat {
     display: flex;
     flex-direction: column;
-    padding: 1.25rem;
-    background: var(--tz-white);
+    padding: 1.35rem;
+    background: linear-gradient(145deg, var(--tz-white), var(--tz-bg));
     border: 1px solid var(--tz-border);
-    border-radius: var(--tz-radius);
+    border-radius: var(--tz-radius-lg);
     text-decoration: none;
     color: inherit;
     transition: all 0.25s var(--tz-ease);
+    position: relative;
+    overflow: hidden;
 }
+
+.tz-cat::before {
+    content: '';
+    position: absolute;
+    inset-inline-end: -20px;
+    top: -20px;
+    width: 80px;
+    height: 80px;
+    background: var(--tz-orange-light);
+    border-radius: 50%;
+    opacity: 0.6;
+    transition: transform 0.3s var(--tz-ease);
+}
+
+.tz-cat:hover::before { transform: scale(1.4); }
 
 .tz-cat:hover { border-color: var(--tz-orange); transform: translateY(-3px); box-shadow: var(--tz-shadow-md); }
 .tz-cat strong { font-size: 1rem; margin-bottom: 0.25rem; }
@@ -998,6 +1078,15 @@ a.tz-flow-step:hover { color: #fff; border-color: var(--tz-orange); }
 
 .tz-panel h2 { margin: 0 0 1rem; font-size: 1.5rem; }
 
+.tz-panel-accent {
+    background: linear-gradient(145deg, var(--tz-dark), #2d1810);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: var(--tz-shadow-md);
+}
+
+.tz-panel-accent p { color: rgba(255, 255, 255, 0.75); }
+
 .tz-features { display: flex; flex-direction: column; gap: 1rem; }
 
 .tz-feat {
@@ -1054,6 +1143,10 @@ a.tz-flow-step:hover { color: #fff; border-color: var(--tz-orange); }
 
 .tz-cta h2 { font-size: 2rem; margin: 0 0 0.5rem; }
 .tz-cta p { margin: 0 0 1.5rem; opacity: 0.9; }
+
+.tz-cta-sm { padding: 2.5rem 0; }
+
+.tz-cta-sm p { margin: 0; }
 
 /* ── Empty / pager ──────────────────────────────────── */
 .tz-empty {
@@ -1178,6 +1271,25 @@ a.tz-flow-step:hover { color: #fff; border-color: var(--tz-orange); }
     .tz-nav.is-open { transform: none; }
 
     .tz-nav-link { padding: 0.85rem 1rem; border-radius: var(--tz-radius); }
+
+    .tz-nav-drop { width: 100%; }
+
+    .tz-nav-drop-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        padding: 0 0 0 0.75rem;
+        margin-top: 0.25rem;
+        display: none;
+    }
+
+    .tz-nav-drop.is-open .tz-nav-drop-menu { display: block; }
+
+    .tz-nav-drop:hover .tz-nav-drop-menu { display: none; }
+    .tz-nav-drop.is-open .tz-nav-drop-menu { display: block; }
 
     .tz-header-end .tz-cart span:not(.tz-cart-count) { display: none; }
 

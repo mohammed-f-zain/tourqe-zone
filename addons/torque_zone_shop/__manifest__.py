@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Torque Zone Shop',
-    'version': '18.0.9.8.0',
+    'version': '18.0.10.0.0',
     'category': 'Website/Website',
     'summary': 'Full professional website with COD e-commerce for Jordan',
     'description': """
-        Complete Torque Zone website: Home, About Us, Shop, Contact.
+        Complete Torque Zone website: Home, About Us, Shop.
         Cash-on-delivery checkout with Jordan cities and sales delivery tracking.
     """,
     'author': 'Torque Zone',
@@ -23,6 +23,7 @@
         'data/website_langs.xml',
         'views/sale_order_views.xml',
         'views/product_template_views.xml',
+        'views/product_category_views.xml',
         'views/website_layout.xml',
         'views/website_assets.xml',
         'views/website_chrome.xml',

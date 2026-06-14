@@ -2,13 +2,13 @@
 <odoo>
     <template id="journey_steps" name="Shopping Journey">
         <div class="tz-flow">
-            <a href="/shop" t-att-class="'tz-flow-step' + (' done' if journey_step in ('cart','checkout','done') else '') + (' on' if journey_step == 'shop' else '')">① Shop</a>
+            <a href="/shop" t-att-class="'tz-flow-step' + (' done' if journey_step in ('cart','checkout','done') else '') + (' on' if journey_step == 'shop' else '')" t-esc="ui['flow_shop']"/>
             <span class="tz-flow-line"/>
-            <a href="/shop/cart" t-att-class="'tz-flow-step' + (' done' if journey_step in ('checkout','done') else '') + (' on' if journey_step == 'cart' else '')">② Cart</a>
+            <a href="/shop/cart" t-att-class="'tz-flow-step' + (' done' if journey_step in ('checkout','done') else '') + (' on' if journey_step == 'cart' else '')" t-esc="ui['flow_cart']"/>
             <span class="tz-flow-line"/>
-            <span t-att-class="'tz-flow-step' + (' done' if journey_step == 'done' else '') + (' on' if journey_step == 'checkout' else '')">③ Checkout</span>
+            <span t-att-class="'tz-flow-step' + (' done' if journey_step == 'done' else '') + (' on' if journey_step == 'checkout' else '')" t-esc="ui['flow_checkout']"/>
             <span class="tz-flow-line"/>
-            <span t-att-class="'tz-flow-step' + (' on' if journey_step == 'done' else '')">④ Done</span>
+            <span t-att-class="'tz-flow-step' + (' on' if journey_step == 'done' else '')" t-esc="ui['flow_done']"/>
         </div>
     </template>
 </odoo>

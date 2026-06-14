@@ -6,14 +6,12 @@
             <section class="tz-hero">
                 <div class="tz-wrap tz-hero-grid">
                     <div class="tz-hero-copy tz-fade">
-                        <p class="tz-label">عدد صناعية · Jordan</p>
-                        <h1 t-if="is_rtl">أدوات صناعية<br/><span>توصيل لبابك</span></h1>
-                        <h1 t-else="">Industrial Tools<br/><span>Delivered Fast</span></h1>
-                        <p class="tz-lead" t-if="is_rtl">مخزون حقيقي · دفع عند الاستلام · أكثر من 36 مدينة</p>
-                        <p class="tz-lead" t-else="">Real stock · Cash on delivery · 36+ cities nationwide</p>
+                        <p class="tz-label" t-esc="ui['hero_label']"/>
+                        <h1><t t-esc="ui['hero_title_1']"/><br/><span t-esc="ui['hero_title_2']"/></h1>
+                        <p class="tz-lead" t-esc="ui['hero_lead']"/>
                         <div class="tz-hero-btns">
-                            <a href="/shop" class="tz-btn tz-btn-fill tz-btn-lg">Shop Now</a>
-                            <a href="tel:0790182722" class="tz-btn tz-btn-line tz-btn-lg">Call Us</a>
+                            <a href="/shop" class="tz-btn tz-btn-fill tz-btn-lg" t-esc="ui['shop_now']"/>
+                            <a href="tel:0790182722" class="tz-btn tz-btn-line tz-btn-lg" t-esc="ui['call_us']"/>
                         </div>
                     </div>
                     <div class="tz-hero-visual tz-fade" style="--d:100ms">
@@ -24,30 +22,39 @@
 
             <section class="tz-band">
                 <div class="tz-wrap tz-band-grid">
-                    <div class="tz-band-item tz-fade"><b>💵</b><div><strong>Cash on Delivery</strong><span>Pay at your door</span></div></div>
-                    <div class="tz-band-item tz-fade" style="--d:60ms"><b>📦</b><div><strong>Real Inventory</strong><span>Stock-backed</span></div></div>
-                    <div class="tz-band-item tz-fade" style="--d:120ms"><b>🚚</b><div><strong>Fast Delivery</strong><span>All Jordan</span></div></div>
+                    <div class="tz-band-item tz-fade">
+                        <b>💵</b>
+                        <div><strong t-esc="ui['cod_title']"/><span t-esc="ui['cod_sub']"/></div>
+                    </div>
+                    <div class="tz-band-item tz-fade" style="--d:60ms">
+                        <b>📦</b>
+                        <div><strong t-esc="ui['inventory_title']"/><span t-esc="ui['inventory_sub']"/></div>
+                    </div>
+                    <div class="tz-band-item tz-fade" style="--d:120ms">
+                        <b>🚚</b>
+                        <div><strong t-esc="ui['delivery_title']"/><span t-esc="ui['delivery_sub']"/></div>
+                    </div>
                 </div>
             </section>
 
             <section class="tz-block tz-wrap" t-if="categories">
                 <div class="tz-block-head tz-fade">
-                    <h2>Shop by Category</h2>
-                    <a href="/shop" class="tz-more">View all →</a>
+                    <h2 t-esc="ui['shop_by_category']"/>
+                    <a href="/shop" class="tz-more"><t t-esc="ui['view_all']"/> →</a>
                 </div>
                 <div class="tz-cats">
-                    <a t-foreach="categories" t-as="cat" t-key="cat.id"
-                       t-attf-href="/shop/category/#{cat.id}"
-                       class="tz-cat tz-fade" t-attf-style="--d:#{cat_index * 40}ms">
-                        <strong t-esc="cat.name"/>
-                        <span><t t-esc="cat.product_count"/> items</span>
+                    <a t-foreach="categories" t-as="item" t-key="item['category'].id"
+                       t-attf-href="/shop/category/#{item['category'].id}"
+                       class="tz-cat tz-fade" t-attf-style="--d:#{item_index * 40}ms">
+                        <strong t-esc="item['category'].name"/>
+                        <span><t t-esc="item['count']"/> <t t-esc="ui['items']"/></span>
                     </a>
                 </div>
             </section>
 
             <section class="tz-block tz-block-alt" t-if="featured_products">
                 <div class="tz-wrap">
-                    <div class="tz-block-head tz-fade"><h2>Featured Products</h2></div>
+                    <div class="tz-block-head tz-fade"><h2 t-esc="ui['featured']"/></div>
                     <div class="tz-grid">
                         <t t-foreach="featured_products" t-as="product">
                             <t t-call="torque_zone_shop.product_card">
@@ -60,9 +67,9 @@
 
             <section class="tz-cta tz-fade">
                 <div class="tz-wrap tz-cta-inner">
-                    <h2>Need tools today?</h2>
-                    <p>Order online — we call you, then deliver.</p>
-                    <a href="/shop" class="tz-btn tz-btn-white tz-btn-lg">Start Shopping</a>
+                    <h2 t-esc="ui['cta_title']"/>
+                    <p t-esc="ui['cta_lead']"/>
+                    <a href="/shop" class="tz-btn tz-btn-white tz-btn-lg" t-esc="ui['start_shopping']"/>
                 </div>
             </section>
         </t>
@@ -70,32 +77,39 @@
 
     <template id="page_about" name="About Us">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tz-top tz-fade"><div class="tz-wrap"><h1>About Torque Zone</h1><p>عدد صناعية — trusted industrial tools in Jordan</p></div></section>
+            <section class="tz-top tz-fade">
+                <div class="tz-wrap">
+                    <h1 t-esc="ui['about_title']"/>
+                    <p t-esc="ui['about_sub']"/>
+                </div>
+            </section>
             <section class="tz-block tz-wrap">
                 <div class="tz-split tz-fade">
-                    <div class="tz-panel">
-                        <h2>Built for professionals</h2>
-                        <p>Quality tools, fair prices, cash on delivery. Every order confirmed by phone.</p>
-                        <a href="/shop" class="tz-btn tz-btn-fill">Browse Shop</a>
+                    <div class="tz-panel tz-panel-accent">
+                        <h2 t-esc="ui['about_h2']"/>
+                        <p t-esc="ui['about_p']"/>
+                        <a href="/shop" class="tz-btn tz-btn-fill" t-esc="ui['browse_shop']"/>
                     </div>
                     <div class="tz-features">
-                        <div class="tz-feat"><span>01</span><div><h3>Trust</h3><p>Real inventory only</p></div></div>
-                        <div class="tz-feat"><span>02</span><div><h3>Service</h3><p>Phone confirmation</p></div></div>
-                        <div class="tz-feat"><span>03</span><div><h3>Delivery</h3><p>Nationwide COD</p></div></div>
+                        <div class="tz-feat">
+                            <span>01</span>
+                            <div><h3 t-esc="ui['feat_trust']"/><p t-esc="ui['feat_trust_p']"/></div>
+                        </div>
+                        <div class="tz-feat">
+                            <span>02</span>
+                            <div><h3 t-esc="ui['feat_service']"/><p t-esc="ui['feat_service_p']"/></div>
+                        </div>
+                        <div class="tz-feat">
+                            <span>03</span>
+                            <div><h3 t-esc="ui['feat_delivery']"/><p t-esc="ui['feat_delivery_p']"/></div>
+                        </div>
                     </div>
                 </div>
             </section>
-        </t>
-    </template>
-
-    <template id="page_contact" name="Contact">
-        <t t-call="torque_zone_shop.website_layout">
-            <section class="tz-top tz-fade"><div class="tz-wrap"><h1>Contact Us</h1></div></section>
-            <section class="tz-block tz-wrap">
-                <div class="tz-contact-row">
-                    <a href="tel:0790182722" class="tz-contact tz-fade"><span>📞</span><h3>طارق</h3><p>0790182722</p></a>
-                    <a href="tel:0785426397" class="tz-contact tz-fade" style="--d:60ms"><span>📞</span><h3>أحمد</h3><p>0785426397</p></a>
-                    <div class="tz-contact tz-contact-hot tz-fade" style="--d:120ms"><span>🛒</span><h3>Order Online</h3><a href="/shop" class="tz-btn tz-btn-fill">Go to Shop</a></div>
+            <section class="tz-cta tz-cta-sm tz-fade">
+                <div class="tz-wrap tz-cta-inner">
+                    <h2 t-esc="ui['cta_title']"/>
+                    <a href="/shop" class="tz-btn tz-btn-white tz-btn-lg" t-esc="ui['start_shopping']"/>
                 </div>
             </section>
         </t>

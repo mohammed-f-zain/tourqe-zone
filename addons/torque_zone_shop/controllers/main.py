@@ -4,7 +4,7 @@ import json
 from odoo import http, _
 from odoo.http import request
 
-from odoo.addons.torque_zone_shop.const import JORDAN_CITIES, JORDAN_CITIES_AR
+from odoo.addons.torque_zone_shop.const import JORDAN_CITIES, JORDAN_CITIES_AR, UI_STRINGS
 
 
 class TorqueZoneShop(http.Controller):
@@ -33,14 +33,22 @@ class TorqueZoneShop(http.Controller):
     def _city_labels(self):
         return dict(self._get_jordan_cities())
 
+    def _ui(self):
+        lang = 'ar' if self._is_rtl() else 'en'
+        return UI_STRINGS[lang]
+
     def _page_ctx(self, active_page, **extra):
-        return {
+        ctx = {
             'cart_count': self._cart_count(),
             'active_page': active_page,
             'is_rtl': self._is_rtl(),
+            'ui': self._ui(),
             'jordan_cities': self._get_jordan_cities(),
-            **extra,
+            'nav_categories': self._get_nav_categories(),
+            'category_id': extra.get('category_id'),
         }
+        ctx.update(extra)
+        return ctx
 
     def _lang_path(self, path):
         if not path.startswith('/'):
@@ -131,11 +139,39 @@ class TorqueZoneShop(http.Controller):
             })
         return lines
 
+    def _category_product_count(self, category):
+        return request.env['product.template'].sudo().search_count(
+            self._get_products_domain(category.id),
+        )
+
+    def _get_nav_categories(self):
+        Category = request.env['product.category'].sudo()
+        roots = Category.search([('parent_id', '=', False)], order='name')
+        nav = []
+        for root in roots:
+            children = Category.search([('parent_id', '=', root.id)], order='name')
+            visible_children = [c for c in children if self._category_product_count(c) > 0]
+            if self._category_product_count(root) > 0 or visible_children:
+                nav.append({'category': root, 'children': visible_children})
+        return nav
+
     def _get_categories(self):
-        return request.env['product.category'].sudo().search([
-            ('parent_id', '=', False),
-            ('product_count', '>', 0),
-        ], order='name')
+        Category = request.env['product.category'].sudo()
+        roots = Category.search([('parent_id', '=', False)], order='name')
+        return Category.browse([
+            root.id for root in roots if self._category_product_count(root) > 0
+        ])
+
+    def _get_filter_categories(self, category_id=None):
+        Category = request.env['product.category'].sudo()
+        if category_id:
+            cat = Category.browse(int(category_id))
+            if cat.exists():
+                children = Category.search([('parent_id', '=', cat.id)], order='name')
+                visible = [c for c in children if self._category_product_count(c) > 0]
+                if visible:
+                    return visible
+        return self._get_categories()
 
     # ── Website pages ───────────────────────────────────────────────────
 
@@ -145,17 +181,21 @@ class TorqueZoneShop(http.Controller):
         domain = self._get_products_domain()
         featured = Product.search(domain, order='write_date desc', limit=8)
         categories = self._get_categories()
+        category_items = [
+            {'category': cat, 'count': self._category_product_count(cat)}
+            for cat in categories
+        ]
         return request.render('torque_zone_shop.page_home', self._page_ctx(
-            'home', featured_products=featured, categories=categories,
+            'home', featured_products=featured, categories=category_items,
         ))
 
     @http.route('/about', type='http', auth='public', website=True, sitemap=True)
     def page_about(self, **kw):
         return request.render('torque_zone_shop.page_about', self._page_ctx('about'))
 
-    @http.route('/contact', type='http', auth='public', website=True, sitemap=True)
-    def page_contact(self, **kw):
-        return request.render('torque_zone_shop.page_contact', self._page_ctx('contact'))
+    @http.route('/contact', type='http', auth='public', website=True)
+    def page_contact_redirect(self, **kw):
+        return request.redirect(self._lang_path('/'))
 
     # ── Shop ────────────────────────────────────────────────────────────
 
@@ -167,7 +207,7 @@ class TorqueZoneShop(http.Controller):
         return request.render('torque_zone_shop.shop_catalog', self._page_ctx(
             'shop',
             products=products,
-            categories=self._get_categories(),
+            categories=self._get_filter_categories(category_id),
             search=search,
             sort=sort or 'name',
             category_id=int(category_id) if category_id else None,
@@ -180,7 +220,7 @@ class TorqueZoneShop(http.Controller):
     def shop_category(self, category_id, page=1, search='', sort='', **kw):
         category = request.env['product.category'].sudo().browse(category_id)
         if not category.exists():
-            return request.redirect('/shop')
+            return request.redirect(self._lang_path('/shop'))
 
         products, total, total_pages = self._search_shop_products(
             category_id=category_id, search=search, sort=sort, page=page,
@@ -188,7 +228,7 @@ class TorqueZoneShop(http.Controller):
         return request.render('torque_zone_shop.shop_catalog', self._page_ctx(
             'shop',
             products=products,
-            categories=self._get_categories(),
+            categories=self._get_filter_categories(category_id),
             category=category,
             search=search,
             sort=sort or 'name',
@@ -390,14 +430,15 @@ class TorqueZoneShop(http.Controller):
         city_labels = dict(JORDAN_CITIES)
 
         errors = []
+        ui = self._ui()
         if not name:
-            errors.append(_('Please enter your name.'))
+            errors.append(ui['err_name'])
         if not phone:
-            errors.append(_('Please enter your phone number.'))
+            errors.append(ui['err_phone'])
         if not address:
-            errors.append(_('Please enter your delivery address.'))
+            errors.append(ui['err_address'])
         if not city or city not in city_labels:
-            errors.append(_('Please select your city.'))
+            errors.append(ui['err_city'])
 
         if errors:
             return request.render('torque_zone_shop.shop_checkout', self._page_ctx(
