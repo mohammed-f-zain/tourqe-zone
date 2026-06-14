@@ -3,6 +3,7 @@ name: Deploy to production
 on:
   push:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -43,8 +44,17 @@ jobs:
           SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
           export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
           echo "Connecting to ${SSH_USER}@${SSH_HOST} ..."
-          sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 \
-            "${SSH_USER}@${SSH_HOST}" "echo SSH connection OK"
+          for attempt in 1 2 3 4 5; do
+            echo "SSH attempt ${attempt}/5 ..."
+            if sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
+              "${SSH_USER}@${SSH_HOST}" "echo SSH connection OK"; then
+              exit 0
+            fi
+            sleep $((attempt * 10))
+          done
+          echo "::error::SSH connection failed after 5 attempts (port 22 timeout)."
+          echo "Check that the server is online and port 22 is open to GitHub Actions."
+          exit 1
 
       - name: Sync files to server
         env:
@@ -55,12 +65,19 @@ jobs:
           SSH_HOST="$(echo -n "$SSH_HOST" | tr -d '[:space:]')"
           SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
           export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
-          rsync -avz --delete \
-            --exclude '.git' \
-            --exclude '.env' \
-            --exclude 'config/odoo.conf' \
-            -e "sshpass -e ssh -o StrictHostKeyChecking=no" \
-            ./ "${SSH_USER}@${SSH_HOST}:/opt/torque-zone/"
+          for attempt in 1 2 3; do
+            echo "Rsync attempt ${attempt}/3 ..."
+            if rsync -avz --delete \
+              --exclude '.git' \
+              --exclude '.env' \
+              --exclude 'config/odoo.conf' \
+              -e "sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
+              ./ "${SSH_USER}@${SSH_HOST}:/opt/torque-zone/"; then
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1
 
       - name: Run deploy on server
         env:
@@ -71,5 +88,13 @@ jobs:
           SSH_HOST="$(echo -n "$SSH_HOST" | tr -d '[:space:]')"
           SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
           export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
-          sshpass -e ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
-            "cd /opt/torque-zone && chmod +x scripts/deploy.sh && ./scripts/deploy.sh"
+          for attempt in 1 2 3; do
+            echo "Deploy attempt ${attempt}/3 ..."
+            if sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
+              "${SSH_USER}@${SSH_HOST}" \
+              "cd /opt/torque-zone && chmod +x scripts/deploy.sh && ./scripts/deploy.sh"; then
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1
