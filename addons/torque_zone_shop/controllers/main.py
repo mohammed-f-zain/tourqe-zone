@@ -206,6 +206,39 @@ class TorqueZoneShop(http.Controller):
         self._save_cart(cart)
         return request.redirect('/shop/cart')
 
+    def _format_money(self, currency, amount):
+        return currency.format(amount)
+
+    def _cart_json_state(self, product_id=None):
+        cart = self._get_cart()
+        lines = self._enrich_cart_lines(cart)
+        currency = (
+            lines[0]['product'].currency_id if lines
+            else request.env.company.currency_id
+        )
+        line_data = None
+        if product_id is not None:
+            pid = int(product_id)
+            match = next((l for l in lines if l['product_id'] == pid), None)
+            if match:
+                line_data = {
+                    'product_id': pid,
+                    'qty': match['qty'],
+                    'subtotal': match['subtotal'],
+                    'subtotal_formatted': self._format_money(currency, match['subtotal']),
+                    'removed': False,
+                }
+            else:
+                line_data = {'product_id': pid, 'qty': 0, 'removed': True}
+
+        return {
+            'count': self._cart_count(),
+            'total': sum(l['subtotal'] for l in lines),
+            'total_formatted': self._format_money(currency, sum(l['subtotal'] for l in lines)),
+            'empty': not lines,
+            'line': line_data,
+        }
+
     def _adjust_cart_qty(self, product_id, action):
         pid = int(product_id)
         cart = self._get_cart()
@@ -232,6 +265,11 @@ class TorqueZoneShop(http.Controller):
         if changed:
             cart['lines'] = new_lines
             self._save_cart(cart)
+
+    @http.route('/shop/cart/qty', type='json', auth='public', website=True)
+    def shop_cart_qty_json(self, product_id, action='inc'):
+        self._adjust_cart_qty(product_id, action)
+        return self._cart_json_state(product_id)
 
     @http.route('/shop/cart/qty', type='http', auth='public', methods=['POST'], website=True, csrf=True)
     def shop_cart_qty(self, product_id, action='inc', **kw):

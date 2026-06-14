@@ -597,6 +597,8 @@
 
 .tz-qty-btn:hover { background: var(--tz-orange); color: #fff; }
 
+.tz-qty-cart.is-busy { opacity: 0.6; pointer-events: none; }
+
 .tz-qty-val {
     min-width: 2rem;
     text-align: center;

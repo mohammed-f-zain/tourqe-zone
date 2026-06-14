@@ -49,6 +49,10 @@ if WebsiteSale:
         def cart_qty(self, product_id, action='inc', **kw):
             return _shop.shop_cart_qty(product_id, action=action, **kw)
 
+        @http.route('/shop/cart/qty', type='json', auth='public', website=True)
+        def cart_qty_json(self, product_id, action='inc'):
+            return _shop.shop_cart_qty_json(product_id, action=action)
+
         @http.route('/shop/cart/inc/<int:product_id>', type='http', auth='public', website=True)
         def cart_inc(self, product_id, **kw):
             return _shop.shop_cart_inc(product_id, **kw)
