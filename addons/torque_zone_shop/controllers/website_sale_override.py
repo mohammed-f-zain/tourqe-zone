@@ -37,10 +37,6 @@ if WebsiteSale:
                 return request.redirect('/shop')
             return _shop.shop_product(product.id, **kwargs)
 
-        @http.route('/shop/product/<int:product_id>', type='http', auth='public', website=True, sitemap=True)
-        def shop_product(self, product_id, **kwargs):
-            return _shop.shop_product(product_id, **kwargs)
-
         @http.route('/shop/cart', type='http', auth='public', website=True, sitemap=False)
         def cart(self, **post):
             return _shop.shop_cart(**post)
