@@ -23,11 +23,14 @@ if WebsiteSale:
             '/shop/category/<int:category_id>',
             '/shop/category/<int:category_id>/page/<int:page>',
         ], type='http', auth='public', website=True, sitemap=True)
-        def shop(self, page=1, category_id=None, search='', **post):
+        def shop(self, page=1, category_id=None, search='', sort='', **post):
             search = search or post.get('search', '')
+            sort = sort or post.get('sort', '')
             if category_id:
-                return _shop.shop_category(category_id, page=page, search=search, **post)
-            return _shop.shop_catalog(page=page, search=search, category_id=None, **post)
+                return _shop.shop_category(
+                    category_id, page=page, search=search, sort=sort, **post,
+                )
+            return _shop.shop_catalog(page=page, search=search, sort=sort, category_id=None, **post)
 
         @http.route([
             '/shop/<model("product.template"):product>',

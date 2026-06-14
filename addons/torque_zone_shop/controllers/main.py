@@ -53,6 +53,25 @@ class TorqueZoneShop(http.Controller):
     def _redirect(self, path, **kw):
         return request.redirect(self._lang_path(kw.get('redirect', path)))
 
+    def _get_sort_order(self, sort=''):
+        orders = {
+            'price_desc': 'list_price desc, name',
+            'price_asc': 'list_price asc, name',
+            'name': 'name asc',
+        }
+        return orders.get(sort, 'name asc')
+
+    def _search_shop_products(self, category_id=None, search='', sort='', page=1):
+        Product = request.env['product.template'].sudo()
+        domain = self._get_products_domain(category_id)
+        if search:
+            domain.append(('name', 'ilike', search))
+        limit = 24
+        offset = (page - 1) * limit
+        products = Product.search(domain, order=self._get_sort_order(sort), limit=limit, offset=offset)
+        total = Product.search_count(domain)
+        return products, total, max(1, (total + 23) // 24)
+
     def _get_products_domain(self, category_id=None):
         domain = [
             ('sale_ok', '=', True),
@@ -116,48 +135,42 @@ class TorqueZoneShop(http.Controller):
     # ── Shop ────────────────────────────────────────────────────────────
 
     @http.route(['/shop', '/shop/page/<int:page>'], type='http', auth='public', website=True)
-    def shop_catalog(self, page=1, search='', category_id=None, **kw):
-        Product = request.env['product.template'].sudo()
-        domain = self._get_products_domain(category_id)
-        if search:
-            domain.append(('name', 'ilike', search))
-
-        products = Product.search(domain, order='name', limit=24, offset=(page - 1) * 24)
-        total = Product.search_count(domain)
-
+    def shop_catalog(self, page=1, search='', sort='', category_id=None, **kw):
+        products, total, total_pages = self._search_shop_products(
+            category_id=category_id, search=search, sort=sort, page=page,
+        )
         return request.render('torque_zone_shop.shop_catalog', self._page_ctx(
             'shop',
             products=products,
             categories=self._get_categories(),
             search=search,
+            sort=sort or 'name',
             category_id=int(category_id) if category_id else None,
             page=page,
-            total_pages=max(1, (total + 23) // 24),
+            total_pages=total_pages,
+            product_total=total,
         ))
 
     @http.route('/shop/category/<int:category_id>', type='http', auth='public', website=True)
-    def shop_category(self, category_id, page=1, search='', **kw):
+    def shop_category(self, category_id, page=1, search='', sort='', **kw):
         category = request.env['product.category'].sudo().browse(category_id)
         if not category.exists():
             return request.redirect('/shop')
 
-        Product = request.env['product.template'].sudo()
-        domain = self._get_products_domain(category_id)
-        if search:
-            domain.append(('name', 'ilike', search))
-
-        products = Product.search(domain, order='name', limit=24, offset=(page - 1) * 24)
-        total = Product.search_count(domain)
-
+        products, total, total_pages = self._search_shop_products(
+            category_id=category_id, search=search, sort=sort, page=page,
+        )
         return request.render('torque_zone_shop.shop_catalog', self._page_ctx(
             'shop',
             products=products,
             categories=self._get_categories(),
             category=category,
             search=search,
+            sort=sort or 'name',
             category_id=category_id,
             page=page,
-            total_pages=max(1, (total + 23) // 24),
+            total_pages=total_pages,
+            product_total=total,
         ))
 
     @http.route('/shop/product/<int:product_id>', type='http', auth='public', website=True)

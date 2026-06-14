@@ -32,16 +32,24 @@
 
             <section class="tz-block tz-wrap">
                 <div class="tz-toolbar tz-fade">
-                    <form class="tz-search" action="/shop" method="get">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="search" name="search" placeholder="Search products…" t-att-value="search or ''"/>
-                        <button type="submit" class="tz-btn tz-btn-fill tz-btn-sm">Search</button>
+                    <form class="tz-shop-filters" method="get"
+                          t-att-action="category_id and '/shop/category/%s' % category_id or '/shop'">
+                        <div class="tz-search">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            <input type="search" name="search" placeholder="Search products…" t-att-value="search or ''"/>
+                        </div>
+                        <select name="sort" class="tz-sort" onchange="this.form.submit()">
+                            <option value="name" t-att-selected="sort == 'name' and 'selected' or None">Name A–Z</option>
+                            <option value="price_asc" t-att-selected="sort == 'price_asc' and 'selected' or None">Price: Low to High</option>
+                            <option value="price_desc" t-att-selected="sort == 'price_desc' and 'selected' or None">Price: High to Low</option>
+                        </select>
+                        <button type="submit" class="tz-btn tz-btn-fill tz-btn-sm">Apply</button>
                     </form>
                     <t t-call="torque_zone_shop.shop_category_pills"/>
                 </div>
 
                 <div class="tz-meta tz-fade" t-if="products">
-                    <span><strong t-esc="len(products)"/> products</span>
+                    <span><strong t-esc="product_total or len(products)"/> products</span>
                     <span class="tz-badge">Cash on Delivery</span>
                 </div>
 
@@ -60,9 +68,10 @@
                 </div>
 
                 <div class="tz-pager tz-fade" t-if="total_pages > 1">
-                    <a t-if="page > 1" t-attf-href="/shop/page/#{page - 1}" class="tz-btn tz-btn-line tz-btn-sm">← Prev</a>
+                    <t t-set="query" t-value="'search=%s&amp;sort=%s' % (search or '', sort or 'name')"/>
+                    <a t-if="page > 1" t-attf-href="/shop/page/#{page - 1}?#{query}" class="tz-btn tz-btn-line tz-btn-sm">← Prev</a>
                     <span><t t-esc="page"/> / <t t-esc="total_pages"/></span>
-                    <a t-if="page &lt; total_pages" t-attf-href="/shop/page/#{page + 1}" class="tz-btn tz-btn-line tz-btn-sm">Next →</a>
+                    <a t-if="page &lt; total_pages" t-attf-href="/shop/page/#{page + 1}?#{query}" class="tz-btn tz-btn-line tz-btn-sm">Next →</a>
                 </div>
             </section>
         </t>
@@ -86,7 +95,6 @@
                         <p class="tz-price tz-price-lg">
                             <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                         </p>
-                        <p class="tz-pdp-desc" t-if="product.description_sale" t-esc="product.description_sale"/>
                         <div class="tz-badge tz-badge-block">💵 Cash on delivery</div>
                         <form action="/shop/cart/add" method="post" class="tz-pdp-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -101,6 +109,14 @@
                             <button type="submit" class="tz-btn tz-btn-fill tz-btn-lg tz-btn-wide">Add to Cart</button>
                         </form>
                     </div>
+                </div>
+            </section>
+            <section class="tz-block tz-wrap" t-if="product.description_sale or product.description">
+                <div class="tz-pdp-details tz-fade">
+                    <h2 t-if="is_rtl">الوصف</h2>
+                    <h2 t-else="">Description</h2>
+                    <p class="tz-pdp-desc" t-if="product.description_sale" t-esc="product.description_sale"/>
+                    <div class="tz-pdp-desc-html" t-if="product.description" t-out="product.description"/>
                 </div>
             </section>
             <section class="tz-block tz-block-alt" t-if="related_products">

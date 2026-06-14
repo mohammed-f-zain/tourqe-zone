@@ -89,10 +89,11 @@
     </template>
 
     <template id="shop_category_pills" name="Category Pills">
+        <t t-set="qs" t-value="'?sort=%s&amp;search=%s' % (sort or 'name', search or '')"/>
         <div class="tz-tags">
-            <a href="/shop" t-att-class="'tz-tag' + (' is-on' if not category_id else '')">All</a>
+            <a t-attf-href="/shop#{qs}" t-att-class="'tz-tag' + (' is-on' if not category_id else '')">All</a>
             <t t-foreach="categories" t-as="cat">
-                <a t-attf-href="/shop/category/#{cat.id}"
+                <a t-attf-href="/shop/category/#{cat.id}#{qs}"
                    t-att-class="'tz-tag' + (' is-on' if category_id == cat.id else '')"
                    t-esc="cat.name"/>
             </t>

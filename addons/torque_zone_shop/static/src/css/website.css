@@ -570,7 +570,65 @@
 
 .tz-pdp-img img { width: 100%; height: 100%; object-fit: cover; }
 
-.tz-pdp-desc { color: var(--tz-muted); line-height: 1.7; }
+.tz-shop-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.tz-shop-filters .tz-search {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.tz-sort {
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--tz-border);
+    border-radius: 999px;
+    background: var(--tz-bg);
+    font-size: 0.875rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.tz-sort:focus {
+    outline: none;
+    border-color: var(--tz-orange);
+    box-shadow: 0 0 0 3px var(--tz-orange-light);
+}
+
+.tz-pdp-details {
+    background: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--tz-shadow-md);
+}
+
+.tz-pdp-details h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.tz-pdp-desc {
+    color: var(--tz-muted);
+    line-height: 1.8;
+    margin: 0 0 1rem;
+    white-space: pre-line;
+}
+
+.tz-pdp-desc-html {
+    color: var(--tz-text);
+    line-height: 1.8;
+}
+
+.tz-pdp-desc-html p { margin: 0 0 0.75rem; }
 
 .tz-field-row {
     display: flex;

@@ -7,8 +7,8 @@
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
             <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
             <link rel="icon" href="/web/image/website/1/logo" type="image/png"/>
-            <link rel="stylesheet" type="text/css" href="/torque_zone_shop/static/src/css/website.css?v=15"/>
-            <script type="text/javascript" src="/torque_zone_shop/static/src/js/website.js?v=15" defer="defer"/>
+            <link rel="stylesheet" type="text/css" href="/torque_zone_shop/static/src/css/website.css?v=16"/>
+            <script type="text/javascript" src="/torque_zone_shop/static/src/js/website.js?v=16" defer="defer"/>
         </xpath>
     </template>
 </odoo>
