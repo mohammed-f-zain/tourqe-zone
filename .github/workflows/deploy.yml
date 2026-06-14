@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,16 +45,17 @@ jobs:
           SSH_USER="$(echo -n "$SSH_USER" | tr -d '[:space:]')"
           export SSHPASS="$(echo -n "$SSH_PASSWORD" | tr -d '\r')"
           echo "Connecting to ${SSH_USER}@${SSH_HOST} ..."
-          for attempt in 1 2 3 4 5; do
-            echo "SSH attempt ${attempt}/5 ..."
-            if sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 \
+          for attempt in 1 2; do
+            echo "SSH attempt ${attempt}/2 ..."
+            if sshpass -e ssh -o StrictHostKeyChecking=no -o ConnectTimeout=20 \
               "${SSH_USER}@${SSH_HOST}" "echo SSH connection OK"; then
               exit 0
             fi
-            sleep $((attempt * 10))
+            sleep 10
           done
-          echo "::error::SSH connection failed after 5 attempts (port 22 timeout)."
-          echo "Check that the server is online and port 22 is open to GitHub Actions."
+          echo "::error::SSH failed — GitHub cannot reach port 22 on your server."
+          echo "Deploy from your Mac instead: SSH_PASSWORD='...' ./scripts/deploy-from-mac.sh"
+          echo "Or enable auto-deploy: SSH_PASSWORD='...' ./scripts/setup-pull-deploy.sh"
           exit 1
 
       - name: Sync files to server
