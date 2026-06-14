@@ -49,6 +49,14 @@ if WebsiteSale:
         def cart_add(self, product_id, qty=1, **kw):
             return _shop.shop_cart_add(product_id, qty=qty, **kw)
 
+        @http.route('/shop/cart/inc/<int:product_id>', type='http', auth='public', website=True)
+        def cart_inc(self, product_id, **kw):
+            return _shop.shop_cart_inc(product_id, **kw)
+
+        @http.route('/shop/cart/dec/<int:product_id>', type='http', auth='public', website=True)
+        def cart_dec(self, product_id, **kw):
+            return _shop.shop_cart_dec(product_id, **kw)
+
         @http.route('/shop/cart/update', type='http', auth='public', methods=['POST'], website=True, csrf=True)
         def cart_update(self, **post):
             return _shop.shop_cart_update(**post)

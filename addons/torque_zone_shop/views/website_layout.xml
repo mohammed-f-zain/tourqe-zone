@@ -94,7 +94,7 @@
     </template>
 
     <template id="product_card" name="Product Card">
-        <article class="tzw-product-card tzw-reveal" t-attf-style="--delay:#{delay or 0}ms">
+        <article class="tzw-product-card tzw-animate-in" t-attf-style="--delay:#{delay or 0}ms">
             <a t-attf-href="/shop/product/#{product.id}" class="tzw-product-img">
                 <img t-att-src="product.image_512 and '/web/image/product.template/%s/image_512' % product.id or '/torque_zone_shop/static/src/img/placeholder.svg'"
                      t-att-alt="product.name" loading="lazy"/>

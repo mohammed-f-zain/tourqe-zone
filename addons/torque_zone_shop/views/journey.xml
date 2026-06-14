@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="journey_steps" name="Shopping Journey">
-        <nav class="tzw-journey tzw-reveal" aria-label="Shopping steps">
-            <a href="/shop" t-att-class="'tzw-journey-step' + (' tzw-journey-done' if journey_step in ('cart','checkout','done') else '') + (' tzw-journey-active' if journey_step == 'shop' else '')">
-                <span class="tzw-journey-num">1</span>
+        <nav class="tzw-journey tzw-animate-in" aria-label="Shopping steps" style="--delay:60ms">
+            <a href="/shop" t-att-class="'tzw-journey-pill' + (' done' if journey_step in ('cart','checkout','done') else '') + (' active' if journey_step == 'shop' else '')">
+                <span class="tzw-journey-icon">1</span>
                 <span>Shop</span>
             </a>
-            <span class="tzw-journey-line"/>
-            <a href="/shop/cart" t-att-class="'tzw-journey-step' + (' tzw-journey-done' if journey_step in ('checkout','done') else '') + (' tzw-journey-active' if journey_step == 'cart' else '')">
-                <span class="tzw-journey-num">2</span>
+            <span class="tzw-journey-connector"/>
+            <a href="/shop/cart" t-att-class="'tzw-journey-pill' + (' done' if journey_step in ('checkout','done') else '') + (' active' if journey_step == 'cart' else '')">
+                <span class="tzw-journey-icon">2</span>
                 <span>Cart</span>
             </a>
-            <span class="tzw-journey-line"/>
-            <span t-att-class="'tzw-journey-step' + (' tzw-journey-done' if journey_step == 'done' else '') + (' tzw-journey-active' if journey_step == 'checkout' else '')">
-                <span class="tzw-journey-num">3</span>
+            <span class="tzw-journey-connector"/>
+            <span t-att-class="'tzw-journey-pill' + (' done' if journey_step == 'done' else '') + (' active' if journey_step == 'checkout' else '')">
+                <span class="tzw-journey-icon">3</span>
                 <span>Checkout</span>
             </span>
-            <span class="tzw-journey-line"/>
-            <span t-att-class="'tzw-journey-step' + (' tzw-journey-active' if journey_step == 'done' else '')">
-                <span class="tzw-journey-num">4</span>
+            <span class="tzw-journey-connector"/>
+            <span t-att-class="'tzw-journey-pill' + (' active' if journey_step == 'done' else '')">
+                <span class="tzw-journey-icon">✓</span>
                 <span>Done</span>
             </span>
         </nav>

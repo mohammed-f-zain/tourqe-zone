@@ -205,6 +205,30 @@ class TorqueZoneShop(http.Controller):
         self._save_cart(cart)
         return request.redirect('/shop/cart')
 
+    @http.route('/shop/cart/inc/<int:product_id>', type='http', auth='public', website=True)
+    def shop_cart_inc(self, product_id, **kw):
+        cart = self._get_cart()
+        for line in cart.get('lines', []):
+            if line['product_id'] == product_id:
+                line['qty'] = line.get('qty', 1) + 1
+                break
+        self._save_cart(cart)
+        return request.redirect(kw.get('redirect', '/shop/cart'))
+
+    @http.route('/shop/cart/dec/<int:product_id>', type='http', auth='public', website=True)
+    def shop_cart_dec(self, product_id, **kw):
+        cart = self._get_cart()
+        new_lines = []
+        for line in cart.get('lines', []):
+            if line['product_id'] == product_id:
+                if line.get('qty', 1) <= 1:
+                    continue
+                line['qty'] -= 1
+            new_lines.append(line)
+        cart['lines'] = new_lines
+        self._save_cart(cart)
+        return request.redirect(kw.get('redirect', '/shop/cart'))
+
     @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
     def shop_cart_remove(self, product_id, **kw):
         cart = self._get_cart()
@@ -233,6 +257,7 @@ class TorqueZoneShop(http.Controller):
 
         name = (post.get('customer_name') or '').strip()
         phone = (post.get('phone_number') or '').strip()
+        address = (post.get('address') or '').strip()
         city = (post.get('city') or '').strip()
         city_labels = dict(JORDAN_CITIES)
 
@@ -241,6 +266,8 @@ class TorqueZoneShop(http.Controller):
             errors.append(_('Please enter your name.'))
         if not phone:
             errors.append(_('Please enter your phone number.'))
+        if not address:
+            errors.append(_('Please enter your delivery address.'))
         if not city or city not in city_labels:
             errors.append(_('Please select your city.'))
 
@@ -263,6 +290,7 @@ class TorqueZoneShop(http.Controller):
         vals = {
             'name': name,
             'phone': phone,
+            'street': address,
             'city': city_labels.get(city, city),
             'country_id': jordan.id if jordan else False,
         }
@@ -282,10 +310,13 @@ class TorqueZoneShop(http.Controller):
             }) for line in lines],
             'delivery_customer_name': name,
             'delivery_phone': phone,
+            'delivery_address': address,
             'delivery_city': city,
             'tz_delivery_status': 'pending',
             'payment_method_cod': True,
-            'note': _('Cash on delivery order from website.'),
+            'note': '%s | %s | %s | %s | COD' % (
+                name, phone, address, city_labels.get(city, city),
+            ),
             'origin': 'Torque Zone Shop',
         })
         order.action_confirm()
@@ -295,6 +326,7 @@ class TorqueZoneShop(http.Controller):
             'cart',
             order=order,
             city_label=self._city_labels().get(city, city),
+            address_label=address,
             journey_step='done',
         ))
 

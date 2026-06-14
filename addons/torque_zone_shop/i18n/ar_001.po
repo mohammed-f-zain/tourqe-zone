@@ -368,5 +368,16 @@ msgstr "يرجى اختيار مدينتك."
 
 #. module: torque_zone_shop
 #: code:addons/torque_zone_shop/controllers/main.py:0
-msgid "Cash on delivery order from website."
-msgstr "طلب دفع عند الاستلام من الموقع."
+msgid "Please enter your delivery address."
+msgstr "يرجى إدخال عنوان التوصيل."
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.shop_checkout
+msgid "Delivery Address *"
+msgstr "عنوان التوصيل *"
+
+#. module: torque_zone_shop
+#: model_terms:ir.ui.view,arch_db:torque_zone_shop.page_home
+msgid "Order in 3 easy steps"
+msgstr "اطلب بثلاث خطوات بسيطة"
+

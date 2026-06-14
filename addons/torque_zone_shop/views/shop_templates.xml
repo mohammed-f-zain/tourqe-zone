@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="qty_stepper" name="Quantity Stepper">
+        <div class="tzw-qty-stepper" t-att-data-product-id="product_id">
+            <button type="button" class="tzw-qty-btn tzw-qty-minus" aria-label="Decrease">−</button>
+            <span class="tzw-qty-value" t-esc="qty"/>
+            <button type="button" class="tzw-qty-btn tzw-qty-plus" aria-label="Increase">+</button>
+            <input type="hidden" t-att-name="name or 'qty'" t-att-value="qty" class="tzw-qty-input"/>
+        </div>
+    </template>
+
     <template id="shop_catalog" name="Shop Catalog">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero">
-                <div class="tzw-container tzw-reveal">
+            <section class="tzw-page-hero tzw-animate-in">
+                <div class="tzw-container">
                     <span class="tzw-eyebrow">عدد صناعية · Shop</span>
                     <h1 t-if="is_rtl and not category">متجرنا</h1>
                     <h1 t-elif="not category">Our Shop</h1>
                     <h1 t-else="" t-esc="category.name"/>
-                    <p t-if="is_rtl">تصفح المنتجات · الدفع عند الاستلام</p>
-                    <p t-else="">Browse products · Cash on delivery</p>
+                    <p class="tzw-hero-sub" t-if="is_rtl">تصفح · أضف للسلة · ادفع عند الاستلام</p>
+                    <p class="tzw-hero-sub" t-else="">Browse · Add to cart · Pay on delivery</p>
                 </div>
             </section>
 
             <section class="tzw-section tzw-container">
-                <div class="tzw-shop-panel tzw-reveal">
+                <div class="tzw-glass-panel tzw-animate-in" style="--delay:80ms">
                     <form class="tzw-search-bar" action="/shop" method="get">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                         <input type="search" name="search" placeholder="Search tools &amp; products…"
@@ -24,33 +33,29 @@
                     <t t-call="torque_zone_shop.shop_category_pills"/>
                 </div>
 
-                <div class="tzw-result-bar tzw-reveal" t-if="products">
-                    <span class="tzw-result-count">
-                        <t t-esc="len(products)"/> products
-                        <t t-if="search"> · "<t t-esc="search"/>"</t>
-                    </span>
+                <div class="tzw-result-bar tzw-animate-in" style="--delay:120ms" t-if="products">
+                    <span><strong t-esc="len(products)"/> products</span>
                     <span class="tzw-cod-chip">💵 Cash on Delivery</span>
                 </div>
 
                 <div class="tzw-product-grid" t-if="products">
                     <t t-foreach="products" t-as="product">
                         <t t-call="torque_zone_shop.product_card">
-                            <t t-set="delay" t-value="product_index * 40"/>
+                            <t t-set="delay" t-value="product_index * 50"/>
                         </t>
                     </t>
                 </div>
 
-                <div class="tzw-empty tzw-empty-card tzw-reveal" t-else="">
+                <div class="tzw-empty-state tzw-animate-in" t-else="">
                     <div class="tzw-empty-icon">📦</div>
                     <h3>No products found</h3>
-                    <p>Add products in Inventory and enable <strong>Show in Shop</strong>.</p>
                     <a href="/shop" class="tzw-btn tzw-btn-primary">View All Products</a>
                 </div>
 
-                <div class="tzw-pagination" t-if="total_pages > 1">
-                    <a t-if="page > 1" t-attf-href="/shop/page/#{page - 1}" class="tzw-btn tzw-btn-ghost">← Prev</a>
+                <div class="tzw-pagination tzw-animate-in" t-if="total_pages > 1">
+                    <a t-if="page > 1" t-attf-href="/shop/page/#{page - 1}" class="tzw-btn tzw-btn-ghost">←</a>
                     <span class="tzw-page-num"><t t-esc="page"/> / <t t-esc="total_pages"/></span>
-                    <a t-if="page &lt; total_pages" t-attf-href="/shop/page/#{page + 1}" class="tzw-btn tzw-btn-ghost">Next →</a>
+                    <a t-if="page &lt; total_pages" t-attf-href="/shop/page/#{page + 1}" class="tzw-btn tzw-btn-ghost">→</a>
                 </div>
             </section>
         </t>
@@ -58,15 +63,15 @@
 
     <template id="shop_product" name="Product Detail">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-page-hero-sm">
-                <div class="tzw-container tzw-reveal">
+            <section class="tzw-page-hero tzw-page-hero-sm tzw-animate-in">
+                <div class="tzw-container">
                     <a href="/shop" class="tzw-back tzw-back-light">← Back to shop</a>
                     <span class="tzw-badge" t-if="product.categ_id" t-esc="product.categ_id.name"/>
                     <h1 t-esc="product.name"/>
                 </div>
             </section>
             <section class="tzw-section tzw-container">
-                <div class="tzw-pdp tzw-pdp-card tzw-reveal">
+                <div class="tzw-pdp tzw-glass-panel tzw-animate-in">
                     <div class="tzw-pdp-gallery">
                         <img t-att-src="image_url" t-att-alt="product.name"/>
                     </div>
@@ -75,13 +80,15 @@
                             <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                         </p>
                         <p class="tzw-pdp-desc" t-if="product.description_sale" t-esc="product.description_sale"/>
-                        <div class="tzw-cod-banner">💵 Cash on delivery — pay when your order arrives</div>
+                        <div class="tzw-cod-banner">💵 Cash on delivery</div>
                         <form action="/shop/cart/add" method="post" class="tzw-pdp-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="product_id" t-att-value="product.id"/>
                             <div class="tzw-qty-row">
                                 <label>Quantity</label>
-                                <input type="number" name="qty" value="1" min="1" class="tzw-input"/>
+                                <t t-call="torque_zone_shop.qty_stepper">
+                                    <t t-set="qty" t-value="1"/>
+                                </t>
                             </div>
                             <input type="hidden" name="redirect" value="/shop/cart"/>
                             <button type="submit" class="tzw-btn tzw-btn-primary tzw-btn-lg tzw-btn-block">Add to Cart</button>
@@ -89,9 +96,9 @@
                     </div>
                 </div>
             </section>
-            <section class="tzw-section tzw-section-muted" t-if="related_products">
+            <section class="tzw-section tzw-section-soft" t-if="related_products">
                 <div class="tzw-container">
-                    <h2 class="tzw-section-title">Related Products</h2>
+                    <h2 class="tzw-section-title tzw-animate-in">Related Products</h2>
                     <div class="tzw-product-grid">
                         <t t-foreach="related_products" t-as="product">
                             <t t-call="torque_zone_shop.product_card"/>
@@ -104,7 +111,7 @@
 
     <template id="shop_cart" name="Cart">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-page-hero-sm">
+            <section class="tzw-page-hero tzw-page-hero-sm tzw-animate-in">
                 <div class="tzw-container">
                     <h1 t-if="is_rtl">سلتك</h1>
                     <h1 t-else="">Your Cart</h1>
@@ -114,45 +121,46 @@
             <section class="tzw-section tzw-container">
                 <div class="tzw-checkout-layout" t-if="lines">
                     <div class="tzw-cart-panel">
-                        <form action="/shop/cart/update" method="post">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <t t-foreach="lines" t-as="line">
-                                <div class="tzw-cart-card tzw-reveal" t-attf-style="--delay:#{line_index * 40}ms">
-                                    <img t-att-src="line['image_url']" t-att-alt="line['name']" class="tzw-cart-card-img"/>
-                                    <div class="tzw-cart-card-body">
-                                        <h3 t-esc="line['name']"/>
-                                        <p class="tzw-cart-card-price">
-                                            <t t-esc="line['price']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
-                                        </p>
-                                        <div class="tzw-cart-card-actions">
-                                            <label>Qty</label>
-                                            <input type="number" t-attf-name="qty_#{line['product_id']}"
-                                                   t-att-value="line['qty']" min="1" class="tzw-input tzw-input-sm"/>
-                                            <span class="tzw-cart-card-total">
-                                                <t t-esc="line['subtotal']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
-                                            </span>
-                                        </div>
+                        <t t-foreach="lines" t-as="line">
+                            <div class="tzw-cart-card tzw-animate-in" t-attf-style="--delay:#{line_index * 60}ms">
+                                <img t-att-src="line['image_url']" t-att-alt="line['name']" class="tzw-cart-card-img"/>
+                                <div class="tzw-cart-card-body">
+                                    <h3 t-esc="line['name']"/>
+                                    <p class="tzw-cart-card-price">
+                                        <t t-esc="line['price']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
+                                    </p>
+                                    <div class="tzw-qty-stepper tzw-qty-stepper-cart">
+                                        <a t-attf-href="/shop/cart/dec/#{line['product_id']}" class="tzw-qty-btn" title="Less">−</a>
+                                        <span class="tzw-qty-value" t-esc="line['qty']"/>
+                                        <a t-attf-href="/shop/cart/inc/#{line['product_id']}" class="tzw-qty-btn" title="More">+</a>
                                     </div>
-                                    <a t-attf-href="/shop/cart/remove/#{line['product_id']}" class="tzw-remove" title="Remove">✕</a>
                                 </div>
-                            </t>
-                            <button type="submit" class="tzw-btn tzw-btn-ghost">Update quantities</button>
-                        </form>
+                                <div class="tzw-cart-card-end">
+                                    <p class="tzw-cart-card-total">
+                                        <t t-esc="line['subtotal']" t-options="{'widget': 'monetary', 'display_currency': line['product'].currency_id}"/>
+                                    </p>
+                                    <a t-attf-href="/shop/cart/remove/#{line['product_id']}" class="tzw-remove-btn" title="Remove">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
                     </div>
-                    <aside class="tzw-summary-panel tzw-reveal">
+                    <aside class="tzw-summary-panel tzw-animate-in" style="--delay:100ms">
                         <h2>Order Summary</h2>
                         <div class="tzw-order-row">
                             <span>Subtotal</span>
                             <span><t t-esc="total" t-options="{'widget': 'monetary', 'display_currency': lines[0]['product'].currency_id}"/></span>
                         </div>
                         <div class="tzw-order-row"><span>Payment</span><span class="tzw-cod-label">Cash on Delivery</span></div>
-                        <a href="/shop/checkout" class="tzw-btn tzw-btn-primary tzw-btn-block tzw-btn-lg">Checkout</a>
+                        <a href="/shop/checkout" class="tzw-btn tzw-btn-primary tzw-btn-block tzw-btn-lg">Checkout →</a>
                         <a href="/shop" class="tzw-btn tzw-btn-ghost tzw-btn-block">Continue Shopping</a>
                     </aside>
                 </div>
-                <div class="tzw-empty tzw-empty-card tzw-reveal" t-else="">
+                <div class="tzw-empty-state tzw-animate-in" t-else="">
                     <div class="tzw-empty-icon">🛒</div>
                     <h3>Your cart is empty</h3>
+                    <p>Browse our shop and add tools to get started.</p>
                     <a href="/shop" class="tzw-btn tzw-btn-primary">Browse Shop</a>
                 </div>
             </section>
@@ -161,21 +169,21 @@
 
     <template id="shop_checkout" name="Checkout">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-page-hero-sm">
+            <section class="tzw-page-hero tzw-page-hero-sm tzw-animate-in">
                 <div class="tzw-container">
                     <h1 t-if="is_rtl">إتمام الطلب</h1>
                     <h1 t-else="">Checkout</h1>
-                    <p t-if="is_rtl">الدفع عند الاستلام — الاسم والهاتف والمدينة فقط</p>
-                    <p t-else="">Cash on delivery — name, phone &amp; city only</p>
+                    <p class="tzw-hero-sub" t-if="is_rtl">الدفع عند الاستلام</p>
+                    <p class="tzw-hero-sub" t-else="">Cash on delivery</p>
                     <t t-call="torque_zone_shop.journey_steps"/>
                 </div>
             </section>
             <section class="tzw-section tzw-container">
-                <div class="tzw-alert" t-if="errors">
+                <div class="tzw-alert tzw-animate-in" t-if="errors">
                     <t t-foreach="errors" t-as="err"><p t-esc="err"/></t>
                 </div>
                 <div class="tzw-checkout-layout">
-                    <form action="/shop/order/confirm" method="post" class="tzw-form-panel tzw-reveal">
+                    <form action="/shop/order/confirm" method="post" class="tzw-form-panel tzw-animate-in">
                         <h2 t-if="is_rtl">بيانات التوصيل</h2>
                         <h2 t-else="">Delivery Details</h2>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -190,6 +198,12 @@
                                    placeholder="07X XXX XXXX" t-att-value="form and form.get('phone_number') or ''"/>
                         </div>
                         <div class="tzw-form-group">
+                            <label for="address">Delivery Address *</label>
+                            <textarea id="address" name="address" required="required" class="tzw-input tzw-textarea" rows="3"
+                                      placeholder="Street, building, area…"
+                                      t-esc="form and form.get('address') or ''"/>
+                        </div>
+                        <div class="tzw-form-group">
                             <label for="city">City *</label>
                             <select id="city" name="city" required="required" class="tzw-input">
                                 <option value="">Select your city</option>
@@ -201,7 +215,7 @@
                         </div>
                         <button type="submit" class="tzw-btn tzw-btn-primary tzw-btn-lg tzw-btn-block">Place Order</button>
                     </form>
-                    <aside class="tzw-summary-panel tzw-reveal">
+                    <aside class="tzw-summary-panel tzw-animate-in" style="--delay:80ms">
                         <h2>Your Order</h2>
                         <t t-foreach="lines" t-as="line">
                             <div class="tzw-order-line">
@@ -222,17 +236,18 @@
 
     <template id="shop_confirmation" name="Order Confirmation">
         <t t-call="torque_zone_shop.website_layout">
-            <section class="tzw-page-hero tzw-page-hero-sm">
+            <section class="tzw-page-hero tzw-page-hero-sm tzw-animate-in">
                 <div class="tzw-container">
                     <t t-call="torque_zone_shop.journey_steps"/>
                 </div>
             </section>
-            <section class="tzw-section tzw-container tzw-confirm-page">
-                <div class="tzw-confirm-card tzw-reveal">
-                    <div class="tzw-confirm-icon">✓</div>
+            <section class="tzw-section tzw-container">
+                <div class="tzw-confirm-card tzw-animate-in">
+                    <div class="tzw-confirm-icon tzw-pulse">✓</div>
                     <h1>Order Placed!</h1>
                     <p class="tzw-confirm-ref">Order <strong t-esc="order.name"/></p>
-                    <p>We'll call <strong t-esc="order.delivery_phone"/> to confirm delivery to <strong t-esc="city_label"/>.</p>
+                    <p>We'll call <strong t-esc="order.delivery_phone"/> to confirm.</p>
+                    <p class="tzw-confirm-address"><strong t-esc="address_label"/> · <strong t-esc="city_label"/></p>
                     <p class="tzw-cod-banner">Pay cash when your order arrives.</p>
                     <div class="tzw-confirm-actions">
                         <a href="/shop" class="tzw-btn tzw-btn-primary">Continue Shopping</a>

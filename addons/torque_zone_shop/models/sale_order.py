@@ -21,6 +21,7 @@ class SaleOrder(models.Model):
     )
     delivery_customer_name = fields.Char(string='Customer Name')
     delivery_phone = fields.Char(string='Phone Number')
+    delivery_address = fields.Text(string='Delivery Address')
     payment_method_cod = fields.Boolean(
         string='Cash on Delivery',
         default=True,
