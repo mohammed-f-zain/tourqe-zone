@@ -3,16 +3,20 @@
     <template id="page_home" name="Home">
         <t t-call="torque_zone_shop.website_layout">
             <t t-set="website_obj" t-value="request.website"/>
-            <section class="tzw-hero">
+            <section class="tzw-hero tzw-hero-modern">
+                <div class="tzw-hero-glow tzw-hero-glow-1"/>
+                <div class="tzw-hero-glow tzw-hero-glow-2"/>
                 <div class="tzw-hero-pattern"/>
                 <div class="tzw-container tzw-hero-grid tzw-reveal">
                     <div class="tzw-hero-text">
                         <span class="tzw-badge tzw-badge-hero">عدد صناعية · Jordan</span>
-                        <h1>Industrial tools.<br/><span>Delivered to you.</span></h1>
-                        <p class="tzw-hero-lead">Shop real inventory from Torque Zone. Order online, pay cash on delivery — anywhere in Jordan.</p>
+                        <h1 t-if="is_rtl">عدد صناعية احترافية<br/><span>نوصلها لبابك</span></h1>
+                        <h1 t-else="">Industrial tools.<br/><span>Delivered to you.</span></h1>
+                        <p class="tzw-hero-lead" t-if="is_rtl">تسوّق من مخزون تورك زون الحقيقي. اطلب أونلاين وادفع عند الاستلام — لجميع مدن الأردن.</p>
+                        <p class="tzw-hero-lead" t-else="">Shop real inventory from Torque Zone. Order online, pay cash on delivery — anywhere in Jordan.</p>
                         <div class="tzw-hero-actions">
                             <a href="/shop" class="tzw-btn tzw-btn-primary tzw-btn-lg">Browse Shop</a>
-                            <a href="/about" class="tzw-btn tzw-btn-outline tzw-btn-lg">About Us</a>
+                            <a href="/contact" class="tzw-btn tzw-btn-outline tzw-btn-lg">Contact Us</a>
                         </div>
                         <div class="tzw-hero-phones">
                             <a href="tel:0790182722" class="tzw-phone-chip">📞 طارق · 0790182722</a>
@@ -20,7 +24,9 @@
                         </div>
                     </div>
                     <div class="tzw-hero-visual">
-                        <img t-att-src="'/web/image/website/%s/logo' % website_obj.id" alt="Torque Zone" class="tzw-hero-logo"/>
+                        <div class="tzw-hero-card">
+                            <img t-att-src="'/web/image/website/%s/logo' % website_obj.id" alt="Torque Zone" class="tzw-hero-logo"/>
+                        </div>
                     </div>
                 </div>
                 <div class="tzw-hero-stats tzw-container">
@@ -38,6 +44,32 @@
                         <div class="tzw-stat-icon">🚚</div>
                         <strong>36+ Cities</strong>
                         <span>Nationwide delivery</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tzw-section tzw-section-steps tzw-container">
+                <div class="tzw-section-head tzw-reveal">
+                    <div>
+                        <span class="tzw-eyebrow">How it works</span>
+                        <h2>Order in 3 simple steps</h2>
+                    </div>
+                </div>
+                <div class="tzw-steps-grid">
+                    <div class="tzw-step-card tzw-reveal" style="--delay:0ms">
+                        <span class="tzw-step-num">1</span>
+                        <h3>Browse &amp; Add</h3>
+                        <p>Pick tools from our shop and add them to your cart.</p>
+                    </div>
+                    <div class="tzw-step-card tzw-reveal" style="--delay:80ms">
+                        <span class="tzw-step-num">2</span>
+                        <h3>Checkout</h3>
+                        <p>Enter your name, phone and city — that's all we need.</p>
+                    </div>
+                    <div class="tzw-step-card tzw-reveal" style="--delay:160ms">
+                        <span class="tzw-step-num">3</span>
+                        <h3>Pay on Delivery</h3>
+                        <p>We call to confirm, then deliver. Pay cash at your door.</p>
                     </div>
                 </div>
             </section>
@@ -69,6 +101,7 @@
                             <span class="tzw-eyebrow">Popular</span>
                             <h2>Featured Products</h2>
                         </div>
+                        <a href="/shop" class="tzw-link-arrow">Go to shop →</a>
                     </div>
                     <div class="tzw-product-grid">
                         <t t-foreach="featured_products" t-as="product">

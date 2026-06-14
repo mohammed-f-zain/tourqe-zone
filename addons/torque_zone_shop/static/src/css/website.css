@@ -113,39 +113,33 @@
   background: var(--tzw-primary); color: var(--tzw-white);
 }
 
-.tzw-cart-btn {
+#tz_website.tzw .tzw-cart-btn {
   position: relative;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: #ffffff; color: var(--tzw-dark) !important;
-  padding: 0.5rem 1rem; border-radius: var(--tzw-radius-sm);
-  font-weight: 800; font-size: 0.88rem;
-  border: 2px solid var(--tzw-primary);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  transition: all var(--tzw-transition);
-}
-.tzw-cart-btn:hover {
-  background: var(--tzw-primary); color: #ffffff !important;
-  transform: translateY(-1px);
-}
-.tzw-cart-btn:hover svg { stroke: #ffffff; }
-.tzw-cart-icon-wrap { position: relative; display: grid; place-items: center; }
-.tzw-cart-label { white-space: nowrap; color: inherit !important; }
-.tzw-cart-badge {
-  position: absolute; top: -10px; right: -10px;
-  background: var(--tzw-primary); color: #ffffff;
-  font-size: 0.65rem; font-weight: 800;
-  min-width: 18px; height: 18px; border-radius: 99px;
-  display: grid; place-items: center;
-  border: 2px solid #ffffff;
-}
-.tzw-btn-nav-shop {
+  display: inline-flex !important; align-items: center; gap: 0.45rem;
   background: var(--tzw-primary) !important;
   color: #ffffff !important;
-  padding: 0.55rem 1.1rem;
-  font-weight: 700;
-  box-shadow: 0 4px 16px rgba(211,82,13,0.45);
+  padding: 0.55rem 1.1rem; border-radius: var(--tzw-radius-sm);
+  font-weight: 800; font-size: 0.9rem;
+  border: 2px solid #ff9a5c;
+  box-shadow: 0 4px 18px rgba(211,82,13,0.55);
+  transition: all var(--tzw-transition);
+  flex-shrink: 0;
 }
-.tzw-hide-mobile { display: inline-flex !important; }
+#tz_website.tzw .tzw-cart-btn:hover {
+  background: var(--tzw-primary-light) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+#tz_website.tzw .tzw-cart-svg { stroke: #ffffff; flex-shrink: 0; }
+#tz_website.tzw .tzw-cart-label { white-space: nowrap; color: #ffffff !important; }
+#tz_website.tzw .tzw-cart-badge {
+  background: #ffffff; color: var(--tzw-primary);
+  font-size: 0.7rem; font-weight: 800;
+  min-width: 20px; height: 20px; border-radius: 99px;
+  display: grid; place-items: center;
+  border: 2px solid var(--tzw-dark);
+  margin-left: 0.1rem;
+}
 
 .tzw-nav-toggle {
   display: none; flex-direction: column; gap: 5px;
@@ -580,6 +574,95 @@ a.tzw-journey-step:hover { color: var(--tzw-white); background: rgba(255,255,255
   animation-delay: var(--delay, 0ms);
 }
 
+/* ── Modern home ── */
+.tzw-hero-modern { position: relative; overflow: hidden; }
+.tzw-hero-glow {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; pointer-events: none;
+}
+.tzw-hero-glow-1 { width: 400px; height: 400px; background: var(--tzw-primary); top: -100px; left: -80px; }
+.tzw-hero-glow-2 { width: 300px; height: 300px; background: #ff8c42; bottom: 0; right: -60px; }
+.tzw-hero-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--tzw-radius); padding: 1rem;
+  box-shadow: var(--tzw-shadow-lg);
+}
+.tzw-section-steps { padding-top: 3rem; }
+.tzw-steps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.tzw-step-card {
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 1.5rem;
+  box-shadow: var(--tzw-shadow); transition: all var(--tzw-transition);
+}
+.tzw-step-card:hover {
+  border-color: rgba(211,82,13,0.35); transform: translateY(-4px);
+  box-shadow: var(--tzw-shadow-lg);
+}
+.tzw-step-num {
+  display: inline-grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--tzw-primary); color: #fff; font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+.tzw-step-card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+.tzw-step-card p { margin: 0; color: var(--tzw-text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+/* ── Shop / Cart / Checkout panels ── */
+.tzw-shop-panel {
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 1.25rem;
+  box-shadow: var(--tzw-shadow); margin-bottom: 1.5rem;
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.tzw-empty-card {
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); box-shadow: var(--tzw-shadow);
+}
+.tzw-cart-panel { display: flex; flex-direction: column; gap: 0.85rem; }
+.tzw-cart-card {
+  display: grid; grid-template-columns: 96px 1fr auto;
+  gap: 1rem; align-items: center;
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 1rem;
+  box-shadow: var(--tzw-shadow);
+}
+.tzw-cart-card-img {
+  width: 96px; height: 96px; object-fit: cover; border-radius: 10px;
+}
+.tzw-cart-card-body h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.tzw-cart-card-price { color: var(--tzw-text-muted); margin: 0 0 0.5rem; font-size: 0.88rem; }
+.tzw-cart-card-actions {
+  display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;
+}
+.tzw-cart-card-actions label { font-size: 0.8rem; font-weight: 600; }
+.tzw-cart-card-total { font-weight: 800; color: var(--tzw-primary); margin-left: auto; }
+.tzw-summary-panel, .tzw-form-panel {
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 1.5rem;
+  box-shadow: var(--tzw-shadow-lg);
+  position: sticky; top: calc(var(--tzw-nav-h) + 1.5rem);
+}
+.tzw-summary-panel h2, .tzw-form-panel h2 {
+  font-size: 1.1rem; margin: 0 0 1rem; padding-bottom: 0.65rem;
+  border-bottom: 2px solid rgba(211,82,13,0.2);
+}
+.tzw-pdp-card {
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 1.5rem;
+  box-shadow: var(--tzw-shadow);
+}
+.tzw-confirm-card {
+  max-width: 520px; margin: 0 auto;
+  background: var(--tzw-white); border: 1px solid var(--tzw-muted);
+  border-radius: var(--tzw-radius); padding: 2.5rem 2rem;
+  box-shadow: var(--tzw-shadow-lg); text-align: center;
+}
+
+/* Hide Odoo ecommerce bleed */
+#wrapwrap .oe_website_sale { display: none !important; }
+.o_skip_to_content { display: none !important; }
+
 /* ── RTL ── */
 #tz_website.tzw[dir="rtl"] .tzw-menu { margin-left: 0; margin-right: auto; }
 #tz_website.tzw[dir="rtl"] .tzw-nav-toggle { margin-left: 0; margin-right: auto; }
@@ -590,9 +673,12 @@ a.tzw-journey-step:hover { color: var(--tzw-white); background: rgba(255,255,255
 #tz_website.tzw[dir="rtl"] .tzw-stat { border-right: none; border-left: 1px solid rgba(255,255,255,0.06); }
 #tz_website.tzw[dir="rtl"] .tzw-stat:last-child { border-left: none; }
 
+#tz_website.tzw[dir="rtl"] .tzw-cart-card-total { margin-left: 0; margin-right: auto; }
+#tz_website.tzw[dir="rtl"] .tzw-cart-badge { margin-left: 0; margin-right: 0.1rem; }
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .tzw-hero-grid, .tzw-about-split, .tzw-pdp, .tzw-checkout-layout { grid-template-columns: 1fr; }
+  .tzw-hero-grid, .tzw-about-split, .tzw-pdp, .tzw-checkout-layout, .tzw-steps-grid { grid-template-columns: 1fr; }
   .tzw-hero-visual { order: -1; }
   .tzw-hero-logo { max-width: 280px; margin: 0 auto; display: block; }
   .tzw-footer-grid { grid-template-columns: 1fr 1fr; }
@@ -600,8 +686,10 @@ a.tzw-journey-step:hover { color: var(--tzw-white); background: rgba(255,255,255
 }
 @media (max-width: 768px) {
   .tzw-nav-toggle { display: flex; }
-  .tzw-hide-mobile { display: none !important; }
-  .tzw-cart-label { display: none; }
+  .tzw-nav-actions { gap: 0.5rem; }
+  #tz_website.tzw .tzw-cart-btn { padding: 0.5rem 0.75rem; }
+  #tz_website.tzw .tzw-cart-label { display: inline; font-size: 0.82rem; }
+  .tzw-lang-switch { display: flex; }
   .tzw-menu {
     display: none; position: fixed; top: var(--tzw-nav-h); left: 0; right: 0;
     background: var(--tzw-dark); flex-direction: column; padding: 1rem;
@@ -609,7 +697,8 @@ a.tzw-journey-step:hover { color: var(--tzw-white); background: rgba(255,255,255
   }
   .tzw-menu.tzw-open { display: flex; }
   .tzw-menu-link { width: 100%; }
-  .tzw-cart-row { grid-template-columns: 64px 1fr; grid-template-rows: auto auto auto; }
+  .tzw-cart-card { grid-template-columns: 72px 1fr; }
+  .tzw-cart-card .tzw-remove { grid-column: 2; justify-self: end; }
   .tzw-footer-grid { grid-template-columns: 1fr; }
   .tzw-cat-pills { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; }
 }

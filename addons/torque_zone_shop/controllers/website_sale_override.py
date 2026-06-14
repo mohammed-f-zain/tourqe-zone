@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Override Odoo's default website_sale /shop routes so our custom
-Torque Zone storefront is always used.
-"""
+"""Override all Odoo website_sale shop routes with our custom storefront."""
 from odoo import http
 from odoo.http import request
 
@@ -40,14 +37,38 @@ if WebsiteSale:
                 return request.redirect('/shop')
             return _shop.shop_product(product.id, **kwargs)
 
-        @http.route([
-            '/shop/cart',
-        ], type='http', auth='public', website=True, sitemap=False)
+        @http.route('/shop/product/<int:product_id>', type='http', auth='public', website=True, sitemap=True)
+        def shop_product(self, product_id, **kwargs):
+            return _shop.shop_product(product_id, **kwargs)
+
+        @http.route('/shop/cart', type='http', auth='public', website=True, sitemap=False)
         def cart(self, **post):
             return _shop.shop_cart(**post)
 
-        @http.route([
-            '/shop/checkout',
-        ], type='http', auth='public', website=True, sitemap=False)
+        @http.route('/shop/cart/add', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+        def cart_add(self, product_id, qty=1, **kw):
+            return _shop.shop_cart_add(product_id, qty=qty, **kw)
+
+        @http.route('/shop/cart/update', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+        def cart_update(self, **post):
+            return _shop.shop_cart_update(**post)
+
+        @http.route('/shop/cart/remove/<int:product_id>', type='http', auth='public', website=True)
+        def cart_remove(self, product_id, **kw):
+            return _shop.shop_cart_remove(product_id, **kw)
+
+        @http.route('/shop/checkout', type='http', auth='public', website=True, sitemap=False)
         def checkout(self, **post):
             return _shop.shop_checkout(**post)
+
+        @http.route('/shop/order/confirm', type='http', auth='public', methods=['POST'], website=True, csrf=True)
+        def order_confirm(self, **post):
+            return _shop.shop_order_confirm(**post)
+
+        @http.route('/shop/payment', type='http', auth='public', website=True)
+        def shop_payment(self, **post):
+            return request.redirect('/shop/checkout')
+
+        @http.route('/shop/confirmation', type='http', auth='public', website=True)
+        def shop_payment_confirmation(self, **post):
+            return request.redirect('/shop')
